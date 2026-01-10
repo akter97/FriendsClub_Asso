@@ -1,0 +1,291 @@
+
+<style>
+  /* Base Body Adjustment */
+  body {
+    margin: 0;
+    padding-bottom: 80px; /* Navbar-er jate content dhaka na pore */
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+
+/* Container positioning */
+.profile-menu-container {
+  position: relative;
+  list-style: none;
+}
+
+/* Modal Styling */
+.profile-modal {
+  display: none;
+  position: absolute;
+  bottom: 60px;
+  right: 0px;
+  width: 220px;
+
+  background: #241d55e5; /* Light background */
+  border-radius: 12px;
+
+  /* Stronger / deeper shadow */
+  box-shadow: 
+    0 8px 15px rgba(168, 132, 132, 0.2),   /* subtle base shadow, thik thak alpha */
+    0 15px 30px rgba(73, 50, 50, 0.25),    /* medium depth */
+    0 25px 40px rgba(0,0,0,0.35);          /* deep shadow for floating effect */
+  
+  z-index: 1000;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+.setup-menu-container {
+  position: relative;
+  list-style: none;
+}
+/* Modal Styling */
+.setup-modal {
+  display: none;
+  position: absolute;
+  bottom: 60px;
+  left: 0px;
+  width: 220px;
+
+  background: #241d55a2; 
+  border-radius: 12px; 
+  box-shadow: 
+    0 8px 15px rgba(168, 132, 132, 0.2),   
+    0 15px 30px rgba(73, 50, 50, 0.25),    
+    0 25px 40px rgba(0,0,0,0.35);    
+  
+  z-index: 1000;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+  padding: 5px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.modal-header img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.modal-header small { color: #48bb78; display: block; font-size: 11px; }
+
+.modal-body { padding: 10px; }
+
+.modal-btn {
+  display: flex;
+  align-items: left;
+  gap: 12px;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #4a5568;
+  font-size: 14px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.modal-btn:hover {
+  background: #f1f5f9;
+  color: #667eea;
+}
+
+.modal-btn i { width: 16px; text-align: center; }
+
+.logout-btn { color: #e53e3e; }
+.logout-btn:hover { background: #fff5f5; color: #c53030; }
+
+hr { border: 0; border-top: 1px solid #edf2f7; margin: 8px 0; }
+
+  /* --- Glossy Bottom Navbar --- */
+  .navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(7, 0, 0, 0.482); /* Glassmorphism effect */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 12px 0;
+    z-index: 2000;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .nav-links {
+    list-style: none;
+    display: flex;
+    justify-content: space-around; /* Icon gulo soman bhabe thakbe */
+    align-items: center;
+    max-width: 600px; /* Desktop-e ektu choto thakbe */
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .nav-links li {
+    flex: 1;
+    text-align: center;
+  }
+
+  .nav-links li a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px; /* Mobile standard size */
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px; /* Icon ar text-er durotto */
+    transition: all 0.3s ease;
+  }
+
+  /* Icon size styling */
+  .nav-icon {
+    font-size: 22px;
+    margin-bottom: 2px;
+  }
+
+  /* Active/Hover State */
+  .nav-links li a:hover {
+    color: #ffd700; /* Gold color on hover */
+    transform: translateY(-5px);
+  }
+
+  /* Dashboard logic-er upor vitti kore active class add kora jabe */
+  .nav-links li a.active {
+    color: #00d2ff;
+  }
+
+  /* Responsive styling for Mobile */
+  @media (max-width: 480px) {
+    .nav-links li a {
+      font-size: 11px;
+    }
+    .nav-icon {
+      font-size: 20px;
+    }
+  }
+</style>
+
+<nav class="navbar">
+  <ul class="nav-links">    
+    
+    <li>
+      <a href="/dashboard">
+        <span class="nav-icon"><i class="fas fa-dashboard"></i></span>
+        <span>Dashboard</span>
+      </a>
+    </li> 
+    <li>
+      <a href="/users">
+        <span class="nav-icon"><i class="fas fa-credit-card"></i></span>
+        <span>Payment</span>
+      </a>
+    </li>
+     <li class="setup-menu-container">
+    <a href="javascript:void(0)" id="setupMenuBtn">
+      <span class="nav-icon"> <i class="fas fa-gear"></i></span>
+      <span>Setup</span> 
+    </a>
+
+  <div id="setupModal" class="setup-modal"> 
+    <div class="modal-body">
+       <a href="/users"class="modal-btn">
+        <i class="fas fa-id-card"></i> Users
+      </a>
+      <a href="/profile/personal-info" class="modal-btn">
+        <i class="fas fa-id-card"></i> Personal Info
+      </a>
+      <a href="/profile/change-password" class="modal-btn">
+        <i class="fas fa-key"></i> Change Password
+      </a>
+     
+    </div>
+  </div>
+</li> 
+    <li>
+      <a href="/users">
+        <span class="nav-icon">
+          <i class="fas fa-file-invoice-dollar"></i>
+        </span>
+        <span>Payment Request</span>
+      </a>
+    </li> 
+     
+ 
+<li class="profile-menu-container">
+  <a href="javascript:void(0)" id="profileMenuBtn">
+    <span class="nav-icon"> <i class="fas fa-user-circle"></i></span>
+    <span>Profile</span> 
+  </a>
+
+  <div id="profileModal" class="profile-modal"> 
+    <div class="modal-body">       
+      <a href="/profile/personal-info" class="modal-btn">
+        <i class="fas fa-id-card"></i> Personal Info
+      </a>
+      <a href="/profile/change-password" class="modal-btn">
+        <i class="fas fa-key"></i> Change Password
+      </a>
+      <hr>
+      <a href="/logout" class="modal-btn logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </div>
+</li>
+  </ul>
+</nav>
+ <script>
+document.addEventListener('DOMContentLoaded', function () {
+ 
+  const profileBtn = document.getElementById('profileMenuBtn');
+  const profileModal = document.getElementById('profileModal');
+
+  profileBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    const isVisible = profileModal.style.display === 'block';
+    profileModal.style.display = isVisible ? 'none' : 'block';
+
+     
+    setupModal.style.display = 'none';
+  });
+
+  profileModal.addEventListener('click', e => e.stopPropagation());
+
+
+  /* ---------- SETUP MODAL ---------- */
+  const setupBtn = document.getElementById('setupMenuBtn');
+  const setupModal = document.getElementById('setupModal');
+
+  setupBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    const isVisible = setupModal.style.display === 'block';
+    setupModal.style.display = isVisible ? 'none' : 'block';
+ 
+    profileModal.style.display = 'none';
+  });
+
+  setupModal.addEventListener('click', e => e.stopPropagation());
+
+
+  /* ---------- OUTSIDE CLICK CLOSE ---------- */
+  document.addEventListener('click', function () {
+    profileModal.style.display = 'none';
+    setupModal.style.display = 'none';
+  });
+
+});
+</script>

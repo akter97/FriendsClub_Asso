@@ -1,0 +1,309 @@
+<div class="container">
+  <h2 style="color:hsl(0, 0%, 100%)"><i class="fas fa-user"></i> <em style="margin-left: 10px;">User Management</em></h2>
+
+  <!-- User Form -->
+  <form id="registrationForm" method="POST" action="/users" enctype="multipart/form-data">
+    <div class="form-step" id="step-roleId">
+      <label style="color:hsl(0, 0%, 100%)">Select User Role *</label>
+      <select name="roleId" id="roleId" required>
+        <option value="" disabled selected>Select Role</option>
+        <option value="1">Admin</option>
+        <option value="2">User / Member</option>
+      </select>
+    </div>
+
+    <div class="form-step" id="step-name" style="display: none;">
+      <input name="name" id="name" placeholder="Full Name *" required />
+    </div>
+
+    <div class="form-step" id="step-email" style="display: none;">
+      <input name="email" id="email" type="email" placeholder="Email Address *" required />
+    </div>
+
+    <div class="form-step" id="step-password" style="display: none;">
+      <input name="password" id="password" type="password" placeholder="Password *" />
+    </div>
+
+    <div class="form-step" id="step-confirmPassword" style="display: none;">
+      <input name="confirmPassword" id="confirmPassword" type="password" placeholder="Confirm Password *" />
+    </div>
+    <div class="form-step" id="step-MemberCode" style="display: none;">
+      <input name="MemberCode" id="MemberCode" placeholder="Member Code" />
+    </div>
+
+    <div class="form-step" id="step-FathersName" style="display: none;">
+      <input name="FathersName" id="FathersName" placeholder="Father's Name" />
+    </div>
+
+    <div class="form-step" id="step-MothersName" style="display: none;">
+      <input name="MothersName" id="MothersName" placeholder="Mother's Name" />
+    </div>
+
+    <div class="form-step" id="step-MobileNo" style="display: none;">
+      <input name="MobileNo" id="MobileNo" placeholder="Mobile Number" />
+    </div>
+
+    <div class="form-step" id="step-PassportNo" style="display: none;">
+      <input name="PassportNo" id="PassportNo" placeholder="Passport Number" />
+    </div>
+
+    <div class="form-step" id="step-Organization" style="display: none;">
+      <input name="Organization" id="Organization" placeholder="Organization" />
+    </div>
+
+    <div class="form-step" id="step-Picture" style="display: none;">
+      <label style="color:hsl(247, 47%, 29%)">Profile Picture</label>
+      <input type="file" name="Picture" id="Picture" accept="image/*" />
+    </div>
+
+    <div class="form-step" id="step-PresentAddress" style="display: none;">
+      <textarea name="PresentAddress" id="PresentAddress" placeholder="Present Address"></textarea>
+    </div>
+
+    <div style="margin-top: 30px; text-align: center;">
+    <button type="submit" id="submitBtn" style="display: none;">
+        <span>💾</span> Save
+    </button>
+</div>
+  </form>
+
+  <hr style="margin: 40px 0;">
+
+  <!-- Users Table -->
+  <div style="overflow-x: auto;">
+    <table>
+      <thead>
+        <tr style="color:white">
+          <th>Picture</th>
+          <th>Name</th>
+          <th>Mobile</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(u => { %>
+          <tr>
+            <td><img src="/uploads/<%= u.Picture || 'default.png' %>" width="40" height="40" style="border-radius: 50%; object-fit: cover;"></td>
+            <td><%= u.name %><br><small><%= u.email %></small></td>
+            <td><%= u.MobileNo || 'N/A' %></td>
+            <td>
+              <div class="action-buttons">
+                <a href="#" class="btn-edit"
+                  data-id="<%= u.id %>"
+                  data-roleid="<%= u.roleId %>"
+                  data-name="<%= u.name %>"
+                  data-email="<%= u.email %>"
+                  data-password="u.password"
+                  data-membercode="<%= u.MemberCode || '' %>"
+                  data-fathersname="<%= u.FathersName || '' %>"
+                  data-mothersname="<%= u.MothersName || '' %>"
+                  data-mobileno="<%= u.MobileNo || '' %>"
+                  data-passportno="<%= u.PassportNo || '' %>"
+                  data-organization="<%= u.Organization || '' %>"
+                  data-presentaddress="<%= u.PresentAddress || '' %>"
+                  data-picture="<%= u.Picture || '' %>">
+                  ✏️
+                </a>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  /* --- Updated Form & Input Styling --- */
+input, select, textarea {
+    width: 100%; /* Full width */
+    padding: 12px 15px;
+    margin-bottom: 5px; /* Spacing between steps */
+    border-radius: 8px;
+    border: 1px solid #ddd; 
+    font-size: 15px;
+    box-sizing: border-box; /* Ensures padding doesn't break width */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    display: block; /* Ensures they behave as blocks */
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.2);
+    outline: none; 
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #4a5568;
+    font-size: 14px;
+}
+
+.form-step {
+    width: 100%; /* Full size ensures admin/user fields are identical */
+    margin-bottom: 20px;
+    animation: fadeIn 0.4s ease;
+}
+
+/* Container Adjustments */
+.container {
+    max-width: 800px; /* Thoda wide for better look */
+    margin: 40px auto; 
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+  #submitBtn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 35px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 0.5px;
+}
+
+#submitBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+#submitBtn:active {
+    transform: translateY(0);
+}
+
+/* Loading animation effect (jodi proyojon hoy) */
+#submitBtn:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+/* --- Basic Styling --- */
+.container { max-width: 900px; margin: auto; padding: 20px; font-family: sans-serif; }
+h2 { color: #667eea; margin-bottom: 20px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 10px; text-align: center; border-bottom: 1px solid #ddd; }
+.action-buttons { display: flex; justify-content: center; gap: 5px; }
+.btn-edit { background: #3498db; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none; }
+input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; }
+.form-step { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+<script>
+ const steps = [
+  'roleId','name','email','password','confirmPassword','MemberCode',
+  'FathersName','MothersName','MobileNo','PassportNo','Organization','Picture','PresentAddress'
+];
+
+const form = document.getElementById('registrationForm');
+const submitBtn = document.getElementById('submitBtn');
+
+const requiredFields = ['roleId','name','email','password','confirmPassword','MemberCode'];
+
+const passwordInput = document.getElementById('password');
+const confirmPasswordInput = document.getElementById('confirmPassword');
+
+// Hide submit by default
+submitBtn.style.display = 'none';
+
+// Check if all required fields are filled AND password matches
+function checkSubmitVisibility() {
+  let allFilled = true;
+
+  requiredFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.value.trim() === "") allFilled = false;
+  });
+
+  if (allFilled && passwordInput.value === confirmPasswordInput.value) {
+    submitBtn.style.display = 'inline-block';
+  } else {
+    submitBtn.style.display = 'none';
+  }
+}
+
+// Confirm Password live validation
+confirmPasswordInput.addEventListener('input', () => {
+  if (passwordInput.value === confirmPasswordInput.value) {
+    confirmPasswordInput.style.borderColor = "green";
+  } else {
+    confirmPasswordInput.style.borderColor = "red";
+  }
+  checkSubmitVisibility();
+});
+
+// Multi-step logic
+steps.forEach((id, index) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  const eventType = el.tagName === 'SELECT' || el.type === 'file' ? 'change' : 'input';
+  el.addEventListener(eventType, () => {
+    if (el.value.trim() !== "") {
+      const nextId = steps[index + 1];
+      if (nextId) document.getElementById(nextId).parentElement.style.display = 'block';
+    }
+    checkSubmitVisibility(); // Check submit button after every change
+  });
+});
+
+// Form submit validation
+form.addEventListener('submit', function (e) {
+  // Final check
+  if (passwordInput.value !== confirmPasswordInput.value) {
+    e.preventDefault();
+    alert("❌ Password and Confirm Password do not match!");
+    confirmPasswordInput.focus();
+    confirmPasswordInput.style.borderColor = "red";
+    return;
+  }
+
+  for (let id of requiredFields) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    if (el.value.trim() === "") {
+      e.preventDefault();
+      alert(`❌ Please fill the required field: ${id}`);
+      el.focus();
+      return;
+    }
+  }
+});
+
+// Prefill on Edit click
+document.querySelectorAll('.btn-edit').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+
+    steps.forEach(field => {
+      const input = document.getElementById(field);
+      if (!input) return;
+
+      const value = btn.dataset[field.toLowerCase()] || '';
+
+      if (input.type === 'file') input.value = '';
+      else input.value = value;
+
+      // Show all fields
+      input.parentElement.style.display = 'block';
+    });
+
+    submitBtn.style.display = 'inline-block';
+    form.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+</script>

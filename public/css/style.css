@@ -1,0 +1,43 @@
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  min-height: 100vh; /* height: 100vh er poriborte min-height use kora safe */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 20px; /* Mobile-e jate container screen-er sathe lege na jay */
+  box-sizing: border-box;
+}
+
+.login-container {
+  background: white;
+  width: 100%; /* Default width full thakbe */
+  max-width: 350px; /* Kintu 350px er beshi boro hobe na */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.2);
+  box-sizing: border-box; /* Padding jate width-er baire na jay */
+}
+
+/* Input box gulo jate container er baire na ber hoy */
+.login-container input {
+  width: 100%;
+  padding: 12px; /* Mobile-e touch korte subidha hobe */
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box; 
+}
+
+
+/* Choto Mobile Device-er jonno extra optimization (Media Query) */
+@media (max-width: 400px) {
+  .login-container {
+    padding: 20px; /* Screen khub choto hole padding komiye deya */
+  }
+  
+  .login-container h2 {
+    font-size: 1.5rem; /* Heading-er size ektu komanu holo */
+  }
+}

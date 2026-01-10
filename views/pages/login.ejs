@@ -1,0 +1,182 @@
+<style>
+  /* Basic Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  body {
+    /* Ekti premium gradient background */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .main-content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* --- Glossy Login Container --- */
+  .login-container {
+    background: rgba(255, 255, 255, 0.15); /* Transparent White */
+    backdrop-filter: blur(15px); /* Glass blur effect */
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Thin border like glass */
+    padding: 40px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 400px; /* Desktop size */
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+
+  .login-container:hover {
+    transform: translateY(-5px);
+  }
+
+  .login-container h2 {
+    color: #fff;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  /* --- Input Styles --- */
+  .login-container input {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    color: #fff;
+    outline: none;
+    font-size: 16px;
+    transition: 0.3s;
+  }
+
+  .login-container input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .login-container input:focus {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+
+  /* --- Password Box --- */
+  .password-box {
+    position: relative;
+    width: 100%;
+  }
+
+  .password-box span {
+    position: absolute;
+    right: 15px;
+    top: 12px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #fff;
+    user-select: none;
+  }
+
+  /* --- Button Style --- */
+  .login-container button {
+    width: 100%;
+    padding: 12px;
+    background: #fff;
+    color: #764ba2;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+  }
+
+  .login-container button:hover {
+    background: #667eea;
+    color: #fff;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  /* --- Error Message --- */
+  .error {
+    background: rgba(255, 0, 0, 0.2);
+    color: #ffcccc;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+  }
+
+  /* --- Footer --- */
+  .footer {
+    margin-top: 25px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  /* --- Media Queries for Mobile --- */
+  @media (max-width: 480px) {
+    .login-container {
+      padding: 30px 20px;
+      margin: 10px;
+    }
+    
+    .login-container h2 {
+      font-size: 24px;
+    }
+  }
+</style>
+
+<div class="main-content">
+  <div class="login-container">
+    <h2>Member Login</h2>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      <p class="error"><%= error %></p>
+    <% } %>
+
+    <form method="POST" action="/login">
+      <input type="email" name="email" placeholder="Email Address" required />
+      
+      <div class="password-box">
+        <input type="password" id="password" name="password" placeholder="Password" required />
+        <span onclick="togglePassword()" id="toggleIcon">👁️</span>
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <p class="footer">© 2024 FriendsClub - All Rights Reserved</p>
+  </div>
+</div>
+
+<script>
+  function togglePassword() {
+    const p = document.getElementById("password");
+    const icon = document.getElementById("toggleIcon");
+    if (p.type === "password") {
+      p.type = "text";
+      icon.innerText = "🙈";
+    } else {
+      p.type = "password";
+      icon.innerText = "👁️";
+    }
+  }
+</script>
