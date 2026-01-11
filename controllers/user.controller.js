@@ -24,18 +24,30 @@ exports.getUsers = (req, res) => {
 };
 
 // Notun User Add Korar Logic
-exports.addUser = (req, res) => {
-  // ২. Security Check: Login chara user add korte dibe na
-  if (!req.session.isLoggedIn) {
-    return res.redirect("/login");
-  }
+ exports.addUser = (req, res) => {
+  const user = {
+    roleId: req.body.roleId,
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    MemberCode: req.body.MemberCode,
+    FathersName: req.body.FathersName,
+    MothersName: req.body.MothersName,
+    MobileNo: req.body.MobileNo,
+    PassportNo: req.body.PassportNo,
+    Organization: req.body.Organization,
+    PresentAddress: req.body.PresentAddress,
+    Picture: req.file ? req.file.filename : null
+  };
 
-  const user = new User(req.body.name, req.body.email);
-  repo.createUser(user, err => {
+  console.log('Adding user:', user);
+
+  repo.addUser(user, (err, result) => {
     if (err) {
       console.error(err);
-      return res.status(500).send("Could not create user");
+      return res.status(500).send('User save failed');
     }
-    res.redirect("/users");
+    res.redirect('/users');
   });
 };
+

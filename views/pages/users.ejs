@@ -1,118 +1,3 @@
-<div class="container">
-  <h2 style="color:hsl(0, 0%, 100%)"><i class="fas fa-user"></i> <em style="margin-left: 10px;">User Management</em></h2>
-
-  <!-- User Form -->
-  <form id="registrationForm" method="POST" action="/users" enctype="multipart/form-data">
-    <div class="form-step" id="step-roleId">
-      <label style="color:hsl(0, 0%, 100%)">Select User Role *</label>
-      <select name="roleId" id="roleId" required>
-        <option value="" disabled selected>Select Role</option>
-        <option value="1">Admin</option>
-        <option value="2">User / Member</option>
-      </select>
-    </div>
-
-    <div class="form-step" id="step-name" style="display: none;">
-      <input name="name" id="name" placeholder="Full Name *" required />
-    </div>
-
-    <div class="form-step" id="step-email" style="display: none;">
-      <input name="email" id="email" type="email" placeholder="Email Address *" required />
-    </div>
-
-    <div class="form-step" id="step-password" style="display: none;">
-      <input name="password" id="password" type="password" placeholder="Password *" />
-    </div>
-
-    <div class="form-step" id="step-confirmPassword" style="display: none;">
-      <input name="confirmPassword" id="confirmPassword" type="password" placeholder="Confirm Password *" />
-    </div>
-    <div class="form-step" id="step-MemberCode" style="display: none;">
-      <input name="MemberCode" id="MemberCode" placeholder="Member Code" />
-    </div>
-
-    <div class="form-step" id="step-FathersName" style="display: none;">
-      <input name="FathersName" id="FathersName" placeholder="Father's Name" />
-    </div>
-
-    <div class="form-step" id="step-MothersName" style="display: none;">
-      <input name="MothersName" id="MothersName" placeholder="Mother's Name" />
-    </div>
-
-    <div class="form-step" id="step-MobileNo" style="display: none;">
-      <input name="MobileNo" id="MobileNo" placeholder="Mobile Number" />
-    </div>
-
-    <div class="form-step" id="step-PassportNo" style="display: none;">
-      <input name="PassportNo" id="PassportNo" placeholder="Passport Number" />
-    </div>
-
-    <div class="form-step" id="step-Organization" style="display: none;">
-      <input name="Organization" id="Organization" placeholder="Organization" />
-    </div>
-
-    <div class="form-step" id="step-Picture" style="display: none;">
-      <label style="color:hsl(247, 47%, 29%)">Profile Picture</label>
-      <input type="file" name="Picture" id="Picture" accept="image/*" />
-    </div>
-
-    <div class="form-step" id="step-PresentAddress" style="display: none;">
-      <textarea name="PresentAddress" id="PresentAddress" placeholder="Present Address"></textarea>
-    </div>
-
-    <div style="margin-top: 30px; text-align: center;">
-    <button type="submit" id="submitBtn" style="display: none;">
-        <span>💾</span> Save
-    </button>
-</div>
-  </form>
-
-  <hr style="margin: 40px 0;">
-
-  <!-- Users Table -->
-  <div style="overflow-x: auto;">
-    <table>
-      <thead>
-        <tr style="color:white">
-          <th>Picture</th>
-          <th>Name</th>
-          <th>Mobile</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% users.forEach(u => { %>
-          <tr>
-            <td><img src="/uploads/<%= u.Picture || 'default.png' %>" width="40" height="40" style="border-radius: 50%; object-fit: cover;"></td>
-            <td><%= u.name %><br><small><%= u.email %></small></td>
-            <td><%= u.MobileNo || 'N/A' %></td>
-            <td>
-              <div class="action-buttons">
-                <a href="#" class="btn-edit"
-                  data-id="<%= u.id %>"
-                  data-roleid="<%= u.roleId %>"
-                  data-name="<%= u.name %>"
-                  data-email="<%= u.email %>"
-                  data-password="u.password"
-                  data-membercode="<%= u.MemberCode || '' %>"
-                  data-fathersname="<%= u.FathersName || '' %>"
-                  data-mothersname="<%= u.MothersName || '' %>"
-                  data-mobileno="<%= u.MobileNo || '' %>"
-                  data-passportno="<%= u.PassportNo || '' %>"
-                  data-organization="<%= u.Organization || '' %>"
-                  data-presentaddress="<%= u.PresentAddress || '' %>"
-                  data-picture="<%= u.Picture || '' %>">
-                  ✏️
-                </a>
-              </div>
-            </td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
-  </div>
-</div>
-
 <style>
   /* --- Updated Form & Input Styling --- */
 input, select, textarea {
@@ -200,6 +85,126 @@ input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; borde
 .form-step { display: block; animation: fadeIn 0.3s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 </style>
+
+<div class="container">
+  <h2 style="color:hsl(0, 0%, 100%)"><i class="fas fa-user"></i> <em style="margin-left: 10px;">User Management</em></h2>
+
+  <!-- User Form -->
+  <form id="registrationForm" method="POST" action="/users" enctype="multipart/form-data">
+    <div class="form-step" id="step-roleId">
+      <label style="color:hsl(0, 0%, 100%)">Select User Role *</label>
+      <select name="roleId" id="roleId" required>
+        <option value="" disabled selected>Select Role</option>
+        <option value="1">Admin</option>
+        <option value="2">User / Member</option>
+      </select>
+    </div>
+
+    <div class="form-step" id="step-name" style="display: none;">
+      <input name="name" id="name" placeholder="Full Name *" required />
+    </div>
+
+    <div class="form-step" id="step-email" style="display: none;">
+      <input name="email" id="email" type="email" placeholder="Email Address *" required />
+    </div>
+
+    <div class="form-step" id="step-password" style="display: none;">
+      <input name="password" id="password" type="password" placeholder="Password *" />
+    </div>
+
+    <div class="form-step" id="step-confirmPassword" style="display: none;">
+      <input name="confirmPassword" id="confirmPassword" type="password" placeholder="Confirm Password *" />
+    </div>
+    <div class="form-step" id="step-MemberCode" style="display: none;">
+      <input name="MemberCode" id="MemberCode" placeholder="Member Code" />
+    </div>
+
+    <div class="form-step" id="step-FathersName" style="display: none;">
+      <input name="FathersName" id="FathersName" placeholder="Father's Name" />
+    </div>
+
+    <div class="form-step" id="step-MothersName" style="display: none;">
+      <input name="MothersName" id="MothersName" placeholder="Mother's Name" />
+    </div>
+
+    <div class="form-step" id="step-MobileNo" style="display: none;">
+      <input name="MobileNo" id="MobileNo" placeholder="Mobile Number" />
+    </div>
+
+    <div class="form-step" id="step-PassportNo" style="display: none;">
+      <input name="PassportNo" id="PassportNo" placeholder="Passport Number" />
+    </div>
+
+    <div class="form-step" id="step-Organization" style="display: none;">
+      <input name="Organization" id="Organization" placeholder="Organization" />
+    </div>
+
+    <div class="form-step" id="step-Picture" style="display: none;">
+      <label style="color:hsl(247, 47%, 29%)">Profile Picture</label>
+      <input type="file" name="Picture" id="Picture" accept="image/*" />
+    </div>
+
+    <div class="form-step" id="step-PresentAddress" style="display: none;">
+      <textarea name="PresentAddress" id="PresentAddress" placeholder="Present Address"></textarea>
+    </div>
+
+    <div style="margin-top: 30px; text-align: center;">
+    <button type="submit" id="submitBtn" style="display: none;">
+        <span>💾</span> Save
+    </button>
+</div>
+  </form>
+
+  <hr style="margin: 40px 0;">
+
+  <!-- Users Table -->
+  <div style="overflow-x: auto;">
+    <table>
+      <thead>
+        <tr style="color:white">
+          <th>Picture</th>
+          <th>Name</th>
+          <th>Mobile</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach(u => { %>
+          <tr> 
+            <td>
+            <img src="/Image/ProfilePicture/<%= u.Picture || 'default.png' %>" 
+                    width="40" height="40" 
+                    style="border-radius: 50%; object-fit: cover;"
+                    onerror="this.src='/Image/ProfilePicture/default.png'">
+            </td>
+               <td><%= u.Picture %><br><small><%= u.email %></small></td>
+            <td><%= u.MobileNo || 'N/A' %></td>
+            <td>
+              <div class="action-buttons">
+                <a href="#" class="btn-edit"
+                  data-id="<%= u.id %>"
+                  data-roleid="<%= u.roleId %>"
+                  data-name="<%= u.name %>"
+                  data-email="<%= u.email %>"
+                  data-password="u.password"
+                  data-membercode="<%= u.MemberCode || '' %>"
+                  data-fathersname="<%= u.FathersName || '' %>"
+                  data-mothersname="<%= u.MothersName || '' %>"
+                  data-mobileno="<%= u.MobileNo || '' %>"
+                  data-passportno="<%= u.PassportNo || '' %>"
+                  data-organization="<%= u.Organization || '' %>"
+                  data-presentaddress="<%= u.PresentAddress || '' %>"
+                  data-picture="<%= u.Picture || '' %>">
+                  ✏️
+                </a>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div> 
 
 <script>
  const steps = [

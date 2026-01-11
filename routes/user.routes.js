@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/user.controller");
-
+const upload = require('../middlewares/upload');
 // --- Route Protection Guard ---
 const isAuth = (req, res, next) => {
     if (req.session.isLoggedIn) {
@@ -16,6 +16,10 @@ const isAuth = (req, res, next) => {
 router.get("/users", isAuth, controller.getUsers);
 
 // Login chara keu users add korte parbe na
-router.post("/users", isAuth, controller.addUser);
-
+//router.post("/users", isAuth, controller.addUser);
+router.post(
+  '/users',
+  upload.single('Picture'),
+  controller.addUser
+);
 module.exports = router;

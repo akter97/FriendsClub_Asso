@@ -1,12 +1,21 @@
  const express = require("express");
 const path = require("path");
 const expressLayouts = require("express-ejs-layouts");
-const session = require("express-session"); // ১. Session import
+const session = require("express-session");
 const authRoutes = require("./routes/auth.routes");
+const userRoutes = require("./routes/user.routes"); // ইউজার রাউট ইমপোর্ট করুন
 
 const app = express();
 
-// ২. Session Configuration (অবশ্যই Body Parser এর নিচে দিবেন)
+// ১. Body Parser (সবার উপরে থাকতে হবে)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ২. Static Files (ছবি দেখার জন্য)
+app.use(express.static(path.join(__dirname, "public")));
+app.use('/uploads', express.static(path.join(__dirname, 'public/Image/ProfilePicture/'))); 
+
+// ৩. Session Configuration
 app.use(session({
     secret: 'friendsclub_secret', 
     resave: false,
@@ -14,40 +23,35 @@ app.use(session({
     cookie: { maxAge: 24 * 60 * 60 * 1000 } // ২৪ ঘণ্টা
 }));
 
-// ৩. Authorization Guard (isAuth Middleware)
-const isAuth = (req, res, next) => {
-    if (req.session.isLoggedIn) {
-        next(); // Login thakle dashboard-e jete dao
-    } else {
-        res.redirect("/login"); // Login na thakle login page-e firot pathao
-    }
-};
-
-// EJS + Layout setup
+// ৪. EJS + Layout setup
 app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.set("layout", "layout");
 app.set("views", path.join(__dirname, "views"));
-// image
 
-app.use('/public', express.static('public'));
+// ৫. Authorization Guard
+const isAuth = (req, res, next) => {
+    if (req.session.isLoggedIn) {
+        next();
+    } else {
+        res.redirect("/login");
+    }
+};
 
-// Body parser
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+// ৬. Routes Setup
+app.use("/", authRoutes); // লগইন/রেজিস্ট্রেশন রাউট
+app.use("/", userRoutes); // আপনার ইউজার ম্যানেজমেন্ট রাউট (যেখানে /users আছে)
 
-// ৪. Protected Route (Login chara keu dhukte parbe na)
-app.use("/", authRoutes);
- app.get("/dashboard", isAuth, (req, res) => {
+// Dashboard
+app.get("/dashboard", isAuth, (req, res) => {
     res.render("pages/dashboard", { 
-        title: "Dashboard Page", // layout.ejs e jodi <%= title %> thake
-        user: req.session.user,  // layout.ejs e jodi <%= user %> thake
+        title: "Dashboard Page",
+        user: req.session.user,
         hideNavbar: false 
     });
 });
 
-// Normal Routes (Login/Register)
+// Root Redirect
 app.get("/", (req, res) => {
     if (req.session.isLoggedIn) {
         res.redirect("/dashboard");
@@ -56,16 +60,17 @@ app.get("/", (req, res) => {
     }
 });
 
+// ৭. ৪0৪ Error Handler
 app.use((req, res) => {
     res.status(404).render("pages/error/404", {
         title: "Page Not Found",
         hideNavbar: true  
     });
 });
+app.use(express.static(path.join(__dirname, 'public')));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 
-
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
+module.exports = app;
 //computereng2021@gmail.com
 //!Q@Wa10)*&
