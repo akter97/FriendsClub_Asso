@@ -5,21 +5,19 @@ const upload = require('../middlewares/upload');
 // --- Route Protection Guard ---
 const isAuth = (req, res, next) => {
     if (req.session.isLoggedIn) {
-        next(); // Login thakle controller-e jete dao
+        next();  
     } else {
-        res.redirect("/login"); // Login na thakle login page-e firot pathao
+        res.redirect("/login"); 
     }
 };
 
-// --- Protected Routes ---
-// Ekhon login chara keu users list dekhte parbe na
-router.get("/users", isAuth, controller.getUsers);
-
-// Login chara keu users add korte parbe na
-//router.post("/users", isAuth, controller.addUser);
+// --- Protected Routes --- 
+router.get("/users", isAuth, controller.getUsers); 
 router.post(
   '/users',
   upload.single('Picture'),
   controller.addUser
 );
+
+router.post('/update', upload.single('Picture'), controller.updateUser); 
 module.exports = router;

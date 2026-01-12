@@ -1,57 +1,37 @@
- const mysql = require("mysql");
- 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",     
-  database: "friendsclub"
-});
+const db = require("../config/db");  
 
-db.connect(err => {
-  if (err) {
-    console.error("Database connection failed: " + err.stack);
-    return;
-  }
-  console.log("MySQL connected");
-});
-
- 
+// Login User
 exports.loginUser = (email, password, callback) => {
   const query = "SELECT * FROM users WHERE email = ? AND password = ?";
   db.query(query, [email, password], callback);
 };
 
- 
+// Get All Users
 exports.getAllUsers = (callback) => {
   const query = "SELECT * FROM users ORDER BY id DESC";
   db.query(query, callback);
 };
 
- 
- exports.addUser = (user, callback) => {
-  const sql = `
-    CALL sp_add_user(
-      ?,?,?,?,?,?,?,?,?,?,?,?
-    )
-  `;
-
+// Add User (Using Stored Procedure)
+exports.addUser = (user, callback) => {
+  const sql = `CALL sp_add_user(?,?,?,?,?,?,?,?,?,?,?,?)`;
   const params = [
-    user.roleId,
-    user.name,
-    user.email,
-    user.password,
-    user.MemberCode,
-    user.FathersName,
-    user.MothersName,
-    user.MobileNo,
-    user.PassportNo,
-    user.Organization,
-    user.PresentAddress,
-    user.Picture
+    user.roleId, user.name, user.email, user.password,
+    user.MemberCode, user.FathersName, user.MothersName,
+    user.MobileNo, user.PassportNo, user.Organization,
+    user.PresentAddress, user.Picture
   ];
+  db.query(sql, params, callback);
+};
 
-  db.query(sql, params, (err, result) => {
-    if (err) return callback(err);
-    callback(null, result);
-  });
+// Update User (Using Stored Procedure)
+exports.updateUser = (user, callback) => {
+  const sql = `CALL sp_update_user(?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+  const params = [
+    user.id, user.roleId, user.name, user.email, user.password,
+    user.MemberCode, user.FathersName, user.MothersName,
+    user.MobileNo, user.PassportNo, user.Organization,
+    user.PresentAddress, user.Picture
+  ];
+  db.query(sql, params, callback);
 };

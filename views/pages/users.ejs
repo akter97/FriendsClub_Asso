@@ -74,6 +74,42 @@ label {
     transform: none;
     box-shadow: none;
 }
+
+
+ #updateBtn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 35px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 0.5px;
+}
+
+#updateBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+#updateBtn:active {
+    transform: translateY(0);
+}
+
+/* Loading animation effect (jodi proyojon hoy) */
+#updateBtn:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
 /* --- Basic Styling --- */
  
 h2 { color: #667eea; margin-bottom: 20px; }
@@ -91,6 +127,7 @@ input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; borde
 
   <!-- User Form -->
   <form id="registrationForm" method="POST" action="/users" enctype="multipart/form-data">
+    <input type="hidden" name="id" id="userId">
     <div class="form-step" id="step-roleId">
       <label style="color:hsl(0, 0%, 100%)">Select User Role *</label>
       <select name="roleId" id="roleId" required>
@@ -139,10 +176,20 @@ input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; borde
       <input name="Organization" id="Organization" placeholder="Organization" />
     </div>
 
-    <div class="form-step" id="step-Picture" style="display: none;">
-      <label style="color:hsl(247, 47%, 29%)">Profile Picture</label>
-      <input type="file" name="Picture" id="Picture" accept="image/*" />
-    </div>
+    <div class="form-step" id="step-Picture" style="display:none;">
+  <label>Profile Picture</label>
+
+  <!-- Old Image Preview -->
+  <img id="previewImage"
+       src="/Image/ProfilePicture/default.png"
+       width="80"
+       style="display:none; border-radius:50%; margin-bottom:10px;">
+
+  <input type="file" name="Picture" id="Picture" accept="image/*">
+
+  <!-- old picture name -->
+  <input type="hidden" name="OldPicture" id="OldPicture">
+</div>
 
     <div class="form-step" id="step-PresentAddress" style="display: none;">
       <textarea name="PresentAddress" id="PresentAddress" placeholder="Present Address"></textarea>
@@ -152,6 +199,9 @@ input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; borde
     <button type="submit" id="submitBtn" style="display: none;">
         <span>💾</span> Save
     </button>
+    <button type="submit" id="updateBtn" style="display:none;">
+  <span>🔄</span> Update
+</button>
 </div>
   </form>
 
@@ -171,13 +221,13 @@ input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; borde
       <tbody>
         <% users.forEach(u => { %>
           <tr> 
-            <td>
+            <td> 
             <img src="/Image/ProfilePicture/<%= u.Picture || 'default.png' %>" 
                     width="40" height="40" 
                     style="border-radius: 50%; object-fit: cover;"
                     onerror="this.src='/Image/ProfilePicture/default.png'">
             </td>
-               <td><%= u.Picture %><br><small><%= u.email %></small></td>
+               <td><%= u.name %><br><small><%= u.email %></small></td>
             <td><%= u.MobileNo || 'N/A' %></td>
             <td>
               <div class="action-buttons">
@@ -208,107 +258,132 @@ input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; borde
 
 <script>
  const steps = [
-  'roleId','name','email','password','confirmPassword','MemberCode',
-  'FathersName','MothersName','MobileNo','PassportNo','Organization','Picture','PresentAddress'
+    'roleId', 'name', 'email', 'password', 'confirmPassword', 'MemberCode',
+    'FathersName', 'MothersName', 'MobileNo', 'PassportNo', 'Organization', 'Picture', 'PresentAddress'
 ];
 
 const form = document.getElementById('registrationForm');
 const submitBtn = document.getElementById('submitBtn');
-
-const requiredFields = ['roleId','name','email','password','confirmPassword','MemberCode'];
-
+const updateBtn = document.getElementById('updateBtn');
+const userIdInput = document.getElementById('userId');
 const passwordInput = document.getElementById('password');
 const confirmPasswordInput = document.getElementById('confirmPassword');
+const requiredFields = ['roleId', 'name', 'email', 'password', 'confirmPassword', 'MemberCode'];
 
-// Hide submit by default
-submitBtn.style.display = 'none';
+// --- Helper: Check Form Validity ---
+function validateForm() {
+    const isEdit = userIdInput.value !== "";
+    let allRequiredFilled = true;
+ 
+    const fieldsToVerify = isEdit ? ['roleId', 'name', 'email', 'MemberCode'] : requiredFields;
 
-// Check if all required fields are filled AND password matches
-function checkSubmitVisibility() {
-  let allFilled = true;
+    fieldsToVerify.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.value.trim() === "") allRequiredFilled = false;
+    });
+ 
+    const passwordsMatch = passwordInput.value === confirmPasswordInput.value;
 
-  requiredFields.forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    if (el.value.trim() === "") allFilled = false;
-  });
-
-  if (allFilled && passwordInput.value === confirmPasswordInput.value) {
-    submitBtn.style.display = 'inline-block';
-  } else {
-    submitBtn.style.display = 'none';
-  }
+    if (allRequiredFilled && passwordsMatch) {
+        if (isEdit) {
+            updateBtn.style.display = 'inline-block';
+            submitBtn.style.display = 'none';
+        } else {
+            submitBtn.style.display = 'inline-block';
+            updateBtn.style.display = 'none';
+        }
+    } else {
+        submitBtn.style.display = 'none';
+        updateBtn.style.display = 'none';
+    }
 }
 
-// Confirm Password live validation
-confirmPasswordInput.addEventListener('input', () => {
-  if (passwordInput.value === confirmPasswordInput.value) {
-    confirmPasswordInput.style.borderColor = "green";
-  } else {
-    confirmPasswordInput.style.borderColor = "red";
-  }
-  checkSubmitVisibility();
-});
-
-// Multi-step logic
+// 
 steps.forEach((id, index) => {
-  const el = document.getElementById(id);
-  if (!el) return;
-
-  const eventType = el.tagName === 'SELECT' || el.type === 'file' ? 'change' : 'input';
-  el.addEventListener(eventType, () => {
-    if (el.value.trim() !== "") {
-      const nextId = steps[index + 1];
-      if (nextId) document.getElementById(nextId).parentElement.style.display = 'block';
-    }
-    checkSubmitVisibility(); // Check submit button after every change
-  });
-});
-
-// Form submit validation
-form.addEventListener('submit', function (e) {
-  // Final check
-  if (passwordInput.value !== confirmPasswordInput.value) {
-    e.preventDefault();
-    alert("❌ Password and Confirm Password do not match!");
-    confirmPasswordInput.focus();
-    confirmPasswordInput.style.borderColor = "red";
-    return;
-  }
-
-  for (let id of requiredFields) {
     const el = document.getElementById(id);
-    if (!el) continue;
-    if (el.value.trim() === "") {
-      e.preventDefault();
-      alert(`❌ Please fill the required field: ${id}`);
-      el.focus();
-      return;
-    }
-  }
+    if (!el) return;
+
+    const eventType = el.tagName === 'SELECT' || el.type === 'file' ? 'change' : 'input';
+    el.addEventListener(eventType, () => { 
+        if (!userIdInput.value && el.value.trim() !== "") {
+            const nextId = steps[index + 1];
+            if (nextId) document.getElementById(nextId).parentElement.style.display = 'block';
+        } 
+        if (id === 'confirmPassword' || id === 'password') {
+            confirmPasswordInput.style.borderColor = (passwordInput.value === confirmPasswordInput.value) ? 'green' : 'red';
+        }
+        
+        validateForm();
+    });
 });
 
-// Prefill on Edit click
+// --- Edit Mode Logic ---
 document.querySelectorAll('.btn-edit').forEach(btn => {
-  btn.addEventListener('click', e => {
-    e.preventDefault();
+    btn.addEventListener('click', e => {
+        e.preventDefault();
 
-    steps.forEach(field => {
-      const input = document.getElementById(field);
-      if (!input) return;
+        // ১. সব ফিল্ড শো করা
+        document.querySelectorAll('.form-step').forEach(s => s.style.display = 'block');
 
-      const value = btn.dataset[field.toLowerCase()] || '';
+        // ২. ডাটা পপুলেট করা
+        userIdInput.value = btn.dataset.id;
+        document.getElementById('roleId').value = btn.dataset.roleid || '';
+        document.getElementById('name').value = btn.dataset.name || '';
+        document.getElementById('email').value = btn.dataset.email || '';
+        document.getElementById('MemberCode').value = btn.dataset.membercode || '';
+        document.getElementById('FathersName').value = btn.dataset.fathersname || '';
+        document.getElementById('MothersName').value = btn.dataset.mothersname || '';
+        document.getElementById('MobileNo').value = btn.dataset.mobileno || '';
+        document.getElementById('PassportNo').value = btn.dataset.passportno || '';
+        document.getElementById('Organization').value = btn.dataset.organization || '';
+        document.getElementById('PresentAddress').value = btn.dataset.presentaddress || '';
 
-      if (input.type === 'file') input.value = '';
-      else input.value = value;
+        // পাসওয়ার্ড ফিল্ড ক্লিয়ার (এডিট মোডে অপশনাল)
+        passwordInput.value = '';
+        confirmPasswordInput.value = '';
+        confirmPasswordInput.style.borderColor = '#ddd';
 
-      // Show all fields
-      input.parentElement.style.display = 'block';
+        // ৩. ইমেজ প্রিভিউ
+        const preview = document.getElementById('previewImage');
+        const oldPicInput = document.getElementById('OldPicture');
+        if (btn.dataset.picture) {
+            preview.src = `/Image/ProfilePicture/${btn.dataset.picture}`;
+            preview.style.display = 'block';
+            oldPicInput.value = btn.dataset.picture;
+        } else {
+            preview.style.display = 'none';
+        }
+
+        // ৪. বাটন সুইচ
+        validateForm();
+        form.scrollIntoView({ behavior: 'smooth' });
     });
+});
 
-    submitBtn.style.display = 'inline-block';
-    form.scrollIntoView({ behavior: 'smooth' });
-  });
+// --- Update API Call ---
+updateBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    
+    if (passwordInput.value !== confirmPasswordInput.value) {
+        alert('❌ Passwords do not match');
+        return;
+    }
+
+    const formData = new FormData(form);
+    fetch('/users/update', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.json())
+    .then(d => {
+        if (d.success) {
+            alert('✅ Updated successfully');
+            location.reload();
+        } else {
+            alert('❌ Update failed: ' + (d.message || 'Unknown error'));
+        }
+    })
+    .catch(err => alert('❌ Error: ' + err));
 });
 
 </script>

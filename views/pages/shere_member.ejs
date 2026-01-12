@@ -1,0 +1,194 @@
+ <div class="admin-container">
+    <div class="setup-card">
+        <div class="card-header">
+            <div class="header-icon"><i class="fas fa-user-tag"></i></div>
+            <div class="header-text">
+                <h2>Share Member Assignment</h2>
+                <p>Link users to sharing periods and manage their status</p>
+            </div>
+        </div>
+
+        <form action="/shere_member/add" method="POST" id="shareMemberForm">
+            <input type="hidden" name="id" id="shareMemberId">
+            <div class="form-grid">
+                
+                <div class="input-box">
+                    <label>Member Name</label>
+                    <div class="field-wrapper">
+                        <i class="fas fa-user"></i>
+                        <select name="user_id" id="user_id" required>
+                            <option value="">-- Choose Member --</option>
+                            <% users.forEach(u => { %>
+                                <option value="<%= u.id %>"><%= u.name %> (<%= u.MemberCode %>)</option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-box">
+                    <label>Starting From (Period)</label>
+                    <div class="field-wrapper">
+                        <i class="fas fa-calendar-alt"></i>
+                        <select name="start_period_id" id="start_period_id" required>
+                            <option value="">-- Choose Period --</option>
+                            <% periods.forEach(p => { %>
+                                <option value="<%= p.id %>"><%= p.month_name %> <%= p.year %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-box">
+                    <label>Share Code / Member Code</label>
+                    <div class="field-wrapper"> 
+                        <i class="fas fa-fingerprint"></i> <input type="text" name="share_code" id="share_code" placeholder="Enter share_code" required>
+                    </div>
+                </div>
+
+                <div class="input-box">
+                    <label>Assign Status</label>
+                    <div class="field-wrapper">
+                        <i class="fas fa-toggle-on"></i>
+                        <select name="status" id="status" required>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="suspended">Suspended</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="submitBtn">
+                <span>Assign New Member</span>
+                <i class="fas fa-check-circle"></i>
+            </button>
+        </form>
+    </div>
+
+    <div class="list-card">
+        <div class="list-header">
+            <h3><i class="fas fa-list-ul"></i> Share Member List</h3>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>                        
+                        <th>Share Code</th>
+                        <th>Member Name</th>
+                        <th>Start Period</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if(shareMembers && shareMembers.length > 0) { %>
+                        <% shareMembers.forEach(sm => { %>
+                        <tr>
+                            <td data-label="ID">#<%= sm.id %></td>
+                            <td data-label="Code"><span class="code-badge"><%= sm.share_code %></span></td>
+                            <td data-label="Name"><strong><%= sm.member_name %></strong></td>
+                            <td data-label="Period"><%= sm.month_name %> <%= sm.year %></td>
+                            <td data-label="Status">
+                                <span class="badge badge-<%= sm.status %>"><%= sm.status %></span>
+                            </td>
+                            <td data-label="Action">
+                                <button class="btn-sm edit" onclick="editShareMember('<%= sm.id %>', '<%= sm.user_id %>', '<%= sm.start_period_id %>', '<%= sm.status %>', '<%= sm.share_code %>')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-sm delete"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr><td colspan="6" style="text-align:center;">No members assigned yet.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary: #4e73df;
+        --success: #1cc88a;
+        --danger: #e74a3b;
+        --warning: #f6c23e; 
+    }
+
+    .admin-container { padding: 20px; background: var(--light-bg); min-height: 100vh; }
+    
+    .setup-card, .list-card {
+        background: #fff; border-radius: 12px; padding: 25px; margin-bottom: 25px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1); max-width: 1000px; margin-inline: auto;
+    }
+
+    .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+    .header-icon { font-size: 28px; color: var(--primary); }
+    .header-text h2 { margin: 0; font-size: 18px; color: #333; }
+    .header-text p { margin: 0; font-size: 12px; color: #858796; }
+
+    /* Form Grid: Desktop 2 columns, Mobile 1 column */
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    
+    .input-box label { display: block; font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+    .field-wrapper { position: relative; }
+    .field-wrapper i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #b7b9cc; }
+    
+    input[type="text"], select {
+        width: 100%; padding: 10px 10px 10px 38px; border: 1px solid #d1d3e2;
+        border-radius: 8px; font-size: 14px; outline: none; box-sizing: border-box;
+    }
+
+    .btn-primary {
+        width: 100%; background: var(--primary); color: white; border: none;
+        padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;
+        margin-top: 20px; display: flex; justify-content: center; gap: 8px;
+    }
+
+    /* Table Design */
+    .table-responsive { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; padding: 12px; background: #f8f9fc; color: var(--primary); font-size: 13px; border-bottom: 2px solid #eee; }
+    td { padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; }
+
+    .code-badge { background: #eaecf4; padding: 3px 8px; border-radius: 4px; font-family: monospace; font-weight: bold; }
+    .badge { padding: 4px 8px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+    .badge-active { background: #d1f7e8; color: var(--success); }
+    .badge-inactive { background: #ffe5e5; color: var(--danger); }
+    .badge-suspended { background: #fff3cd; color: var(--warning); }
+
+    .btn-sm { padding: 6px 10px; border: none; border-radius: 5px; cursor: pointer; color: white; }
+    .edit { background: var(--primary); }
+    .delete { background: var(--danger); }
+
+    /* Mobile Responsive Logic */
+    @media (max-width: 768px) {
+        .form-grid { grid-template-columns: 1fr; }
+        .admin-container { padding: 10px; }
+        .setup-card, .list-card { padding: 15px; }
+        
+        /* Optional: Stack table on very small screens */
+        thead { display: none; }
+        tr { display: block; margin-bottom: 15px; border: 1px solid #eee; border-radius: 8px; padding: 10px; }
+        td { display: flex; justify-content: space-between; align-items: center; border: none; padding: 5px; text-align: right; }
+        td::before { content: attr(data-label); font-weight: bold; color: var(--primary); font-size: 12px; }
+    }
+</style>
+
+<script>
+function editShareMember(id, userId, periodId, status, shareCode) {
+    document.getElementById('shareMemberId').value = id;
+    document.getElementById('user_id').value = userId;
+    document.getElementById('start_period_id').value = periodId;
+    document.getElementById('status').value = status;
+    document.getElementById('share_code').value = shareCode; // share_code আপডেট করা হয়েছে
+    
+    document.getElementById('shareMemberForm').action = '/shere_member/update';
+    document.querySelector('#submitBtn span').innerText = "Update Assignment";
+    document.querySelector('#submitBtn i').className = "fas fa-sync-alt";
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>

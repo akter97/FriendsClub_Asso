@@ -51,3 +51,33 @@ exports.getUsers = (req, res) => {
   });
 };
 
+/* =========================
+   UPDATE USER (EDIT)
+========================= */
+ exports.updateUser = (req, res) => {
+    const {
+        id, roleId, name, email, password, MemberCode,
+        FathersName, MothersName, MobileNo,
+        PassportNo, Organization, PresentAddress, OldPicture
+    } = req.body;
+ 
+    const picture = req.file ? req.file.filename : OldPicture;
+ 
+    const userData = {
+        id, roleId, name, email, MemberCode,
+        FathersName, MothersName, MobileNo,
+        PassportNo, Organization, PresentAddress, picture
+    };
+ 
+    if (password && password.trim() !== '') {
+        userData.password = password;
+    } 
+    repo.updateUser(userData, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.json({ success: false, message: "Database Error" });
+        }
+         
+        res.json({ success: true, message: 'User updated successfully' });
+    });
+};
