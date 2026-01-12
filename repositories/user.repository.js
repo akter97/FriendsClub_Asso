@@ -15,19 +15,19 @@ db.connect(err => {
   console.log("MySQL connected");
 });
 
-// লগইন চেক করার লজিক
+ 
 exports.loginUser = (email, password, callback) => {
   const query = "SELECT * FROM users WHERE email = ? AND password = ?";
   db.query(query, [email, password], callback);
 };
 
-// সকল ইউজার তুলে আনার লজিক
+ 
 exports.getAllUsers = (callback) => {
   const query = "SELECT * FROM users ORDER BY id DESC";
   db.query(query, callback);
 };
 
-// নতুন ইউজার অ্যাড করার সঠিক লজিক (Stored Procedure দিয়ে)
+ 
  exports.addUser = (user, callback) => {
   const sql = `
     CALL sp_add_user(
