@@ -1,0 +1,210 @@
+ <style>
+  :root {
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --primary-color: #00d2ff;
+    --text-main: #ffffff;
+    --text-dim: #b3b3b3;
+    --input-bg: rgba(0, 0, 0, 0.3);
+  }
+
+  .payment-container {
+    max-width: 480px;
+    margin: 10px auto;
+    padding: 10px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  .payment-container h2 { 
+    text-align: center; 
+    margin-bottom: 30px; 
+    font-weight: 600; 
+    letter-spacing: 1px;
+    font-size: 24px;
+  }
+
+  .input-box { margin-bottom: 20px; }
+
+  .input-box label { 
+    display: block; 
+    margin-bottom: 8px; 
+    font-size: 13px; 
+    font-weight: 500;
+    color: var(--text-dim); 
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Input, Select, Textarea common styling */
+  .input-box select, 
+  .input-box input, 
+  .input-box textarea {
+    width: 100%;
+    padding: 14px 16px; /* Increased padding for better touch area */
+    background: var(--input-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Specific color for dropdown options to ensure readability */
+  .input-box select option {
+    background-color: #1a1a1a;
+    color: #fff;
+  }
+
+  /* Hover & Focus states */
+  .input-box input:hover, .input-box select:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .input-box input:focus, .input-box select:focus { 
+    border-color: var(--primary-color);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.2);
+  }
+
+  /* File input specific styling */
+  .input-box input[type="file"] {
+    padding: 10px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  #transID_box { display: none; }
+
+  .submit-btn {
+    display: block;
+    width: 80%;
+    padding: 16px;
+    margin: 15px auto !important;
+    background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer; 
+    box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .submit-btn:hover { 
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 210, 255, 0.4);
+    filter: brightness(1.1);
+  }
+
+  .submit-btn:active { transform: translateY(0); }
+
+  /* Mobile Responsive Adjustments */
+  @media (max-width: 520px) {
+    .payment-container { 
+      margin: 5px; 
+      padding: 10px; 
+      border-radius: 20px;
+    }
+    
+    .payment-container h2 { font-size: 20px; }
+    
+    .input-box input, .input-box select {
+      padding: 12px 14px;
+      font-size: 14px;
+    }
+  }
+</style>
+
+<div class="payment-container">
+  <h2>Make Payment</h2>
+  <form action="/payment" method="POST" enctype="multipart/form-data" id="paymentForm">
+    
+    <div class="input-box">
+      <label>Date</label>
+      <input type="date" name="payment_date" id="currentDate" readonly required>
+    </div>
+
+    <div class="input-box">
+      <label>Select Member Code</label>
+      <select name="share_number" required>
+        <% if (memberCodes && memberCodes.length > 0) { %>
+          <% memberCodes.forEach(item => { %>
+            <option value="<%= item.MemberCode %>"><%= item.MemberCode %></option>
+          <% }) %>
+        <% } %>
+      </select>
+    </div>
+
+    <div class="input-box">
+      <label>Payment Method</label>
+      <select name="payment_method" id="payMethod" required>
+        <option value="Cash">Cash</option>
+        <option value="bKash">bKash</option>
+        <option value="Nagad">Nagad</option>
+        <option value="Bank">Bank</option>
+      </select>
+    </div>
+
+    <div class="input-box" id="transID_box">
+      <label>Transaction ID</label>
+      <input type="text" name="transaction_id" id="transaction_id" placeholder="Enter TxnID">
+    </div>
+
+    <div class="input-box">
+      <label>Amount</label>
+      <input type="number" name="amount" step="0.01" placeholder="Enter Amount" required>
+    </div>
+
+    <div class="input-box">
+      <label>Reference</label>
+      <select name="reference">
+        <option value="None">None</option>
+        <% references.forEach(refUser => { %>
+          <option value="<%= refUser.id %>"><%= refUser.name %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <input type="hidden" name="payment_status" value="Due">
+
+    <div class="input-box">
+      <label>Receipt (Optional)</label>
+      <input type="file" name="receipt_image" accept="image/*">
+    </div>
+
+    <div class="input-box">
+      <label>Remarks</label>
+      <textarea name="remarks" rows="2"></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn">Submit Payment</button>
+  </form>
+</div>
+
+<script> 
+  document.getElementById('currentDate').valueAsDate = new Date(); 
+  const payMethod = document.getElementById('payMethod');
+  const transBox = document.getElementById('transID_box');
+  const transInput = document.getElementById('transaction_id');
+
+  payMethod.addEventListener('change', function() {
+    if (this.value === 'Cash') {
+      transBox.style.display = 'none';
+      transInput.removeAttribute('required');
+      transInput.value = ""; // Clear value
+    } else {
+      transBox.style.display = 'block';
+      transInput.setAttribute('required', 'required');
+    }
+  });
+</script>

@@ -6,6 +6,7 @@ const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");  
 const periodRoutes = require("./routes/period.route");  
 const shereMemberRoutes = require('./routes/shereMember.route');
+const paymentRoutes = require("./routes/payment.routes");
 const app = express();
 
  
@@ -44,6 +45,7 @@ app.use("/", authRoutes);
 app.use("/", userRoutes); 
 app.use('/period', periodRoutes);
 app.use('/shere_member', shereMemberRoutes);
+app.use('/', paymentRoutes);
 // Dashboard
 app.get("/dashboard", isAuth, (req, res) => {
     res.render("pages/dashboard", { 
