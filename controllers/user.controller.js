@@ -1,3 +1,4 @@
+ 
 const User = require("../models/user.model");
 const repo = require("../repositories/user.repository");
 
@@ -79,5 +80,69 @@ exports.getUsers = (req, res) => {
         }
          
         res.json({ success: true, message: 'User updated successfully' });
+    });
+};
+
+
+
+exports.changePasswordPage = (req, res) => { 
+  res.render("pages/change_password", {
+    title: "Change Password",
+    user: req.session.user,
+    hideNavbar: false
+  });
+};
+// Password update handle korar jonno 
+ exports.changePassword = (req, res) => {    
+    const { old_password, new_password, confirm_password } = req.body;
+
+    // Session check (id undefined error bondho korar jonno)
+    if (!req.session.user || !req.session.user.id) {
+        return res.render('pages/change_password', { 
+            title: 'Change Password', error: 'Please login first!', success: null 
+        });
+    }
+
+    const userId = req.session.user.id; 
+    // STEP 1: Repository theke user-er current data ana
+    repo.getUserForValidation(userId, async (err, results) => {      
+        if (err || results.length === 0) {
+            return res.render('pages/change_password', { 
+                title: 'Change Password', error: 'User not found in database!', success: null 
+            });
+        }
+ 
+        const dbUser = results[0]; // Database theke pawa user
+
+ 
+        // STEP 2: Old Password Match check kora (Bcrypt comparison)
+        
+        if (old_password!=dbUser.password) { 
+            return res.render('pages/change_password', { 
+                title: 'Change Password', error: 'Old password is incorrect!', success: null 
+            });
+        } 
+         
+        repo.updateUserPassword(userId, new_password, (updateErr) => {
+            if (updateErr) {
+              console.log(22);
+                return res.render('pages/change_password', { 
+                    title: 'Change Password', 
+                    error: 'Update failed!', 
+                    success: null,
+                    user: req.session.user,
+                    hideNavbar: false 
+                });
+            }
+            console.log(202);
+            // Success Message pathano
+            res.render('pages/change_password', { 
+                title: 'Change Password', 
+                error: null, 
+                success: 'Password updated successfully! ✅',
+                user: req.session.user,
+                hideNavbar: false 
+            });
+    });
     });
 };

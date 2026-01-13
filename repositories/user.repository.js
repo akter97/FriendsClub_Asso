@@ -35,3 +35,20 @@ exports.updateUser = (user, callback) => {
   ];
   db.query(sql, params, callback);
 };
+ 
+
+// User khuje ber korar jonno (Controller ekhon ata pabe)
+exports.getUserForValidation = (id, callback) => {
+    const query = "SELECT * FROM users WHERE id = ?";
+    db.query(query, [id], callback);
+};
+// Password update kora
+exports.updateUserPassword = async (userId, newPassword, callback) => {
+  
+    try { 
+        const query = "UPDATE users SET password = ? WHERE id = ?";
+        db.query(query, [newPassword, userId], callback);
+    } catch (err) {
+        callback(err, null);
+    }
+};

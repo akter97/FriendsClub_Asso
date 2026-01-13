@@ -13,11 +13,16 @@ const isAuth = (req, res, next) => {
 
 // --- Protected Routes --- 
 router.get("/users", isAuth, controller.getUsers); 
+
 router.post(
   '/users',
   upload.single('Picture'),
   controller.addUser
 );
-
 router.post('/update', upload.single('Picture'), controller.updateUser); 
+
+
+ 
+router.get("/change-password", isAuth, controller.changePasswordPage);
+router.post('/change-password', isAuth, controller.changePassword); 
 module.exports = router;

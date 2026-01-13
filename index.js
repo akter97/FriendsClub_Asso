@@ -70,9 +70,16 @@ app.use((req, res) => {
     });
 });
 app.use(express.static(path.join(__dirname, 'public')));
+//const PORT = process.env.PORT || 3000;
+//app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+const HOST = '0.0.0.0'; // 0.0.0.0 mane holo server-ti local network-er sob IP theke access kora jabe
 
+app.listen(PORT, HOST, () => {
+    console.log(`Server running on:`);
+    console.log(`- Local: http://localhost:${PORT}`);
+    console.log(`- Network: http://[APNAR_IP_ADDRESS]:${PORT}`);
+});
 module.exports = app;
 //computereng2021@gmail.com
 //!Q@Wa10)*&

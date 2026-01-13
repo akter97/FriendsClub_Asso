@@ -167,7 +167,15 @@ hr { border: 0; border-top: 1px solid #edf2f7; margin: 8px 0; }
   .nav-links li a.active {
     color: #00d2ff;
   }
+.setup-modal {
+  left: 0;
+  bottom: 70px; /* Navbar theke ektu upore */
+}
 
+.profile-modal {
+  right: 0;
+  bottom: 70px;
+}
   /* Responsive styling for Mobile */
   @media (max-width: 480px) {
     .nav-links li a {
@@ -188,12 +196,48 @@ hr { border: 0; border-top: 1px solid #edf2f7; margin: 8px 0; }
         <span>Dashboard</span>
       </a>
     </li> 
-    <li>
-      <a href="/payment">
-        <span class="nav-icon"><i class="fas fa-credit-card"></i></span>
-        <span>Payment</span>
-      </a>
-    </li>
+    <% if (user && user.roleId == 2) { %>
+        <li>
+              <a href="/payment">
+                <span class="nav-icon"><i class="fas fa-credit-card"></i></span>
+                <span>Payment</span>
+              </a>
+            </li>
+      
+        
+        <li class="profile-menu-container">
+          <a href="javascript:void(0)" id="profileMenuBtn">
+            <span class="nav-icon"> <i class="fas fa-user-circle"></i></span>
+            <span>Profile</span> 
+          </a>
+
+          <div id="profileModal" class="profile-modal"> 
+            <div class="modal-body">       
+              <a href="/profile/personal-info" class="modal-btn">
+                <i class="fas fa-id-card"></i> Personal Info
+              </a>
+              <a href="/change-password" class="modal-btn">
+                <i class="fas fa-key"></i> Change Password
+              </a>
+              <hr>
+              <a href="/logout" class="modal-btn logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </a>
+            </div>
+          </div>
+        </li>
+    <% } %>
+
+    <% if (user && user.roleId == 1) { %>
+        <li>
+              <a href="/payment Request">
+                <span class="nav-icon">
+                  <i class="fas fa-file-invoice-dollar"></i>
+                </span>
+                <span>Payment Request</span>
+              </a>
+            </li> 
+            
      <li class="setup-menu-container">
     <a href="javascript:void(0)" id="setupMenuBtn">
       <span class="nav-icon"> <i class="fas fa-gear"></i></span>
@@ -211,80 +255,58 @@ hr { border: 0; border-top: 1px solid #edf2f7; margin: 8px 0; }
       <a href="/shere_member" class="modal-btn">
         <i class="fas fa-calendar-check"></i> Shere Member
       </a>
-     
+     <hr>
+              <a href="/logout" class="modal-btn logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </a>
     </div>
   </div>
-</li> 
-    <li>
-      <a href="/payment Request">
-        <span class="nav-icon">
-          <i class="fas fa-file-invoice-dollar"></i>
-        </span>
-        <span>Payment Request</span>
-      </a>
-    </li> 
-     
- 
-<li class="profile-menu-container">
-  <a href="javascript:void(0)" id="profileMenuBtn">
-    <span class="nav-icon"> <i class="fas fa-user-circle"></i></span>
-    <span>Profile</span> 
-  </a>
+     </li> 
 
-  <div id="profileModal" class="profile-modal"> 
-    <div class="modal-body">       
-      <a href="/profile/personal-info" class="modal-btn">
-        <i class="fas fa-id-card"></i> Personal Info
-      </a>
-      <a href="/profile/change-password" class="modal-btn">
-        <i class="fas fa-key"></i> Change Password
-      </a>
-      <hr>
-      <a href="/logout" class="modal-btn logout-btn">
-        <i class="fas fa-sign-out-alt"></i> Logout
-      </a>
-    </div>
-  </div>
-</li>
+<% } %>
+   
   </ul>
 </nav>
  <script>
 document.addEventListener('DOMContentLoaded', function () {
- 
+  
+  // Elements
   const profileBtn = document.getElementById('profileMenuBtn');
   const profileModal = document.getElementById('profileModal');
-
-  profileBtn.addEventListener('click', function (e) {
-    e.stopPropagation();
-    const isVisible = profileModal.style.display === 'block';
-    profileModal.style.display = isVisible ? 'none' : 'block';
-
-     
-    setupModal.style.display = 'none';
-  });
-
-  profileModal.addEventListener('click', e => e.stopPropagation());
-
-
-  /* ---------- SETUP MODAL ---------- */
   const setupBtn = document.getElementById('setupMenuBtn');
   const setupModal = document.getElementById('setupModal');
 
-  setupBtn.addEventListener('click', function (e) {
-    e.stopPropagation();
-    const isVisible = setupModal.style.display === 'block';
-    setupModal.style.display = isVisible ? 'none' : 'block';
- 
-    profileModal.style.display = 'none';
-  });
+  // helper function to close all
+  function closeAll() {
+    if (profileModal) profileModal.style.display = 'none';
+    if (setupModal) setupModal.style.display = 'none';
+  }
 
-  setupModal.addEventListener('click', e => e.stopPropagation());
+  /* ---------- PROFILE MODAL LOGIC ---------- */
+  if (profileBtn && profileModal) {
+    profileBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      const isVisible = profileModal.style.display === 'block';
+      closeAll(); // Age baki sob bondho korbe
+      profileModal.style.display = isVisible ? 'none' : 'block';
+    });
+    profileModal.addEventListener('click', e => e.stopPropagation());
+  }
 
+  /* ---------- SETUP MODAL LOGIC ---------- */
+  if (setupBtn && setupModal) {
+    setupBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      const isVisible = setupModal.style.display === 'block';
+      closeAll(); // Age baki sob bondho korbe
+      setupModal.style.display = isVisible ? 'none' : 'block';
+    });
+    setupModal.addEventListener('click', e => e.stopPropagation());
+  }
 
   /* ---------- OUTSIDE CLICK CLOSE ---------- */
   document.addEventListener('click', function () {
-    profileModal.style.display = 'none';
-    setupModal.style.display = 'none';
+    closeAll();
   });
 
 });
