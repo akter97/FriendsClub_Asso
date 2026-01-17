@@ -212,14 +212,26 @@ body{
                 <% if (pendingList && pendingList.length > 0) { %>
                     <% pendingList.filter(r => r.status === 'Pending').forEach(row => { %>
                     <tr onclick="viewDetails(this)">
-                        <td data-id="<%= row.id %>" 
-                            data-name="<%= row.member_name %>" 
-                            data-amount="<%= row.amount %>" 
-                            data-date="<%= row.payment_date ? new Date(row.payment_date).toLocaleDateString() : 'N/A' %>"
-                            data-status="<%= row.status %>"
-                            data-reference="<%= row.reference_name || '-' %>">
-                            <%= row.member_name || 'N/A' %>
-                        </td>
+                        <td
+                                data-id="<%= row.id %>"
+                                data-member-name="<%= row.member_name || 'N/A' %>"
+                                data-share-number="<%= row.shere_number || 'N/A' %>"
+                                data-payment-date="<%= row.payment_date ? new Date(row.payment_date).toISOString().split('T')[0] : 'N/A' %>"
+                                data-payment-method="<%= row.payment_method || 'N/A' %>"
+                                data-reference-id="<%= row.reference || 'N/A' %>"
+                                data-reference-name="<%= row.reference_name || 'N/A' %>"
+                                data-transaction-id="<%= row.transaction_id || 'N/A' %>"
+                                data-amount="<%= row.amount || '0.00' %>"
+                                data-receipt-image="<%= row.receipt_image || '' %>"
+                                data-remarks="<%= row.remarks || '' %>"
+                                data-payment-status="<%= row.payment_status || 'N/A' %>"
+                                data-status="<%= row.status || 'N/A' %>"
+                                data-created-at="<%= row.created_at ? new Date(row.created_at).toLocaleString() : 'N/A' %>"
+                                data-updated-by="<%= row.updated_by || 'N/A' %>"
+                                data-updated-at="<%= row.updated_at ? new Date(row.updated_at).toLocaleString() : 'N/A' %>"
+                                >
+                                <%= row.member_name || 'N/A' %>
+                                </td>
                         <td><%= row.payment_date ? new Date(row.payment_date).toLocaleDateString() : 'N/A' %></td>
                         <td style="color:var(--primary-glow); font-weight:600"><%= row.amount %> ৳</td>
                         <td onclick="event.stopPropagation()">
@@ -261,14 +273,26 @@ body{
                 <% if (pendingList && pendingList.some(r => r.status !== 'Pending')) { %>
                     <% pendingList.filter(r => r.status === 'Paid' || r.status === 'Cancelled').forEach(row => { %>
                     <tr onclick="viewDetails(this)">
-                        <td data-id="<%= row.id %>" 
-                            data-name="<%= row.member_name %>" 
-                            data-amount="<%= row.amount %>" 
-                            data-date="<%= row.payment_date ? new Date(row.payment_date).toLocaleDateString() : 'N/A' %>"
-                            data-status="<%= row.status %>"
-                            data-reference="<%= row.reference_name || '-' %>">
+                        <td
+                            data-id="<%= row.id %>"
+                            data-member-name="<%= row.member_name || 'N/A' %>"
+                            data-share-number="<%= row.shere_number || 'N/A' %>"
+                            data-payment-date="<%= row.payment_date ? new Date(row.payment_date).toISOString().split('T')[0] : 'N/A' %>"
+                            data-payment-method="<%= row.payment_method || 'N/A' %>"
+                            data-reference-id="<%= row.reference || 'N/A' %>"
+                            data-reference-name="<%= row.reference_name || 'N/A' %>"
+                            data-transaction-id="<%= row.transaction_id || 'N/A' %>"
+                            data-amount="<%= row.amount || '0.00' %>"
+                            data-receipt-image="<%= row.receipt_image || '' %>"
+                            data-remarks="<%= row.remarks || '' %>"
+                            data-payment-status="<%= row.payment_status || 'N/A' %>"
+                            data-status="<%= row.status || 'N/A' %>"
+                            data-created-at="<%= row.created_at ? new Date(row.created_at).toLocaleString() : 'N/A' %>"
+                            data-updated-by="<%= row.updated_by || 'N/A' %>"
+                            data-updated-at="<%= row.updated_at ? new Date(row.updated_at).toLocaleString() : 'N/A' %>"
+                            >
                             <%= row.member_name || 'N/A' %>
-                        </td>
+                            </td>
                         <td style="color:var(--primary-glow); font-weight:600"><%= row.amount %> ৳</td>
                         <td><span class="status-badge <%= row.status === 'Paid' ? 'status-paid' : 'status-cancelled' %>"><%= row.status %></span></td>
                         <td style="text-align:right; color:#888; font-size:13px"><%= row.reference_name || '—' %></td>
@@ -308,27 +332,45 @@ function setupSearch(inputId, bodyId) {
 }
 
 // View details modal
-function viewDetails(rowElem) {
+ function viewDetails(rowElem) {
+    // প্রথম td থেকে সব ডাটা নেওয়া হচ্ছে
     const td = rowElem.querySelector('td');
-    const id = td.dataset.id;
-    const name = td.dataset.name;
-    const amount = td.dataset.amount;
-    const date = td.dataset.date;
-    const status = td.dataset.status;
-    const reference = td.dataset.reference;
+    const d = td.dataset; // বারবার td.dataset না লিখে d ভেরিয়েবল ব্যবহার করা হয়েছে
 
-    // Populate modal
+    // Populate modal with correct mapping
     const modalBody = document.getElementById('modalBody');
-    modalBody.innerHTML = ` 
-        <div class="info-box"><label>Name</label><span>${name}</span></div>
-        <div class="info-box"><label>Amount</label><span>${amount} ৳</span></div>
-        <div class="info-box"><label>Date</label><span>${date}</span></div>
-        <div class="info-box"><label>Status</label><span>${status}</span></div>
-        <div class="info-box"><label>Reference</label><span>${reference}</span></div>
-    `;
+    modalBody.innerHTML = `
+        <div class="info-box"><label>Member Name</label><span>${d.memberName || 'N/A'}</span></div>
+        <div class="info-box"><label>Share Number</label><span>${d.shareNumber || 'N/A'}</span></div>
+        <div class="info-box"><label>Amount</label><span style="color:var(--primary-glow); font-weight:bold;">${d.amount || '0.00'} ৳</span></div>
+        <div class="info-box"><label>Payment Date</label><span>${d.paymentDate || 'N/A'}</span></div>
+        <div class="info-box"><label>Payment Method</label><span>${d.paymentMethod || 'N/A'}</span></div>
+        <div class="info-box"><label>Transaction ID</label><span>${d.transactionId || 'N/A'}</span></div>
+        <div class="info-box"><label>Reference</label><span>${d.referenceName || 'N/A'} (ID: ${d.referenceId || '—'})</span></div>
+         
+        <div class="info-box"><label>Payment Status</label><span class="status-badge">${d.status || 'N/A'}</span></div>
+        <div class="info-box"><label>Remarks</label><span>${d.remarks || 'No remarks'}</span></div>
+        <hr>
+        <div style="font-size: 12px; color: #888;">
+            <div>Created: ${d.createdAt}</div>
+            <div>Updated By: ${d.updatedBy} at ${d.updatedAt}</div>
+        </div>
+
+        <div class="info-box image-box" style="margin-top:15px;">
+            <label>Receipt Image</label>
+            ${
+                d.receiptImage && d.receiptImage !== '' 
+                ? `<img src="/Image/voucher/${d.receiptImage}" 
+                   alt="Receipt" 
+                   style="width:100%; border-radius:8px; margin-top:8px; cursor:pointer;"
+                   onclick="window.open(this.src)">`
+                : `<div style="padding:10px; background:#f0f0f0; border-radius:5px; color:#666;">No Image Available</div>`
+            }
+        </div>`;
+
+    // মোডাল দেখানো
     document.getElementById('detailModal').style.display = 'block';
 }
-
 // Close modal
 function closeModal() {
     document.getElementById('detailModal').style.display = 'none';

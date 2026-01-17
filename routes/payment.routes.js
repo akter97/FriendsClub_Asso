@@ -17,6 +17,8 @@ const upload = multer({ storage: storage });
 
 // Routes
 router.get("/payment", paymentController.getPaymentPage);
+//router.post("/payment", upload.single("receipt_image"), paymentController.postPayment);
+
 router.post("/payment", upload.single("receipt_image"), paymentController.postPayment);
 router.get("/payment-history-data", paymentController.getPaymentHistory); 
 router.delete("/payment/delete/:id", paymentController.postDeletePayment);
