@@ -1,22 +1,18 @@
 const dashboardRepo = require("../repositories/dashboard.repository");
 
 exports.getDashboard = async (req, res) => {
-     
-    try { 
-        console.log(99);
-        const counts = await dashboardRepo.getMemberCounts();
-        console.log(counts);
-        const overall = await dashboardRepo.getOverallStats();
-        console.log(overall);
-        const monthly = await dashboardRepo.getMonthlyStats();
-        console.log(monthly);
-        const weekly = await dashboardRepo.getWeeklyStats();
-        console.log(weekly);
-        const todaysPayments = await dashboardRepo.getTodaysPayments();
-        console.log(todaysPayments);
-        const recentPayments = await dashboardRepo.getRecentPayments();
-        console.log(recentPayments);
- 
+    console.log("Session User:", req.session.user);
+    const userId = req.session.user.id;
+    const roleId = req.session.user.roleId;
+    console.log(userId);
+    console.log(roleId);
+    try {  
+        const counts = await dashboardRepo.getMemberCounts(); 
+        const overall = await dashboardRepo.getOverallStats(userId,roleId); 
+        const monthly = await dashboardRepo.getMonthlyStats(userId,roleId); 
+        const weekly = await dashboardRepo.getWeeklyStats(); 
+        const todaysPayments = await dashboardRepo.getTodaysPayments(); 
+        const recentPayments = await dashboardRepo.getRecentPayments(); 
         const dashboardData = {
             dashboardStats: { 
                 members: counts?.members || 0,

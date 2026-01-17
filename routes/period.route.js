@@ -18,4 +18,6 @@ router.get('/', isAuth,periodController.getPeriodPage);
 // Form submit handle
 router.post('/add',isAuth, periodController.addPeriod);
 router.post('/update', periodController.updatePeriod);
+
+router.post('/processPayment', periodController.processPayment);
 module.exports = router;

@@ -332,10 +332,9 @@ function setupSearch(inputId, bodyId) {
 }
 
 // View details modal
- function viewDetails(rowElem) {
-    // প্রথম td থেকে সব ডাটা নেওয়া হচ্ছে
+ function viewDetails(rowElem) { 
     const td = rowElem.querySelector('td');
-    const d = td.dataset; // বারবার td.dataset না লিখে d ভেরিয়েবল ব্যবহার করা হয়েছে
+    const d = td.dataset;  
 
     // Populate modal with correct mapping
     const modalBody = document.getElementById('modalBody');
@@ -367,8 +366,7 @@ function setupSearch(inputId, bodyId) {
                 : `<div style="padding:10px; background:#f0f0f0; border-radius:5px; color:#666;">No Image Available</div>`
             }
         </div>`;
-
-    // মোডাল দেখানো
+ 
     document.getElementById('detailModal').style.display = 'block';
 }
 // Close modal

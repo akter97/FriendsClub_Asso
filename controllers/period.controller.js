@@ -1,3 +1,4 @@
+ const paymentRepo = require('../repositories/payment.repository');
  const db = require("../config/db");
  exports.getPeriodPage = (req, res) => { 
     const sql = "SELECT * FROM periods ORDER BY id DESC";    
@@ -18,7 +19,7 @@
 
 
 exports.addPeriod = (req, res) => {
-    const { selectedMonth, status } = req.body; 
+    const { selectedMonth, status,amount } = req.body; 
     const [year, monthNum] = selectedMonth.split('-');
     
     const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -52,4 +53,48 @@ exports.updatePeriod = (req, res) => {
         }
         res.redirect('/period');
     });
+};
+
+
+
+ exports.processPayment = (req, res) => {
+    try {
+        console.log('REQ BODY =>', req.body);
+
+        const { periodId, month, amount, status } = req.body;
+
+        if (!periodId || !month || !amount) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid request data'
+            });
+        }
+
+        paymentRepo.processPayment(
+            periodId,
+            month,
+            amount,
+            status,
+            (err, result) => {
+                if (err) {
+                    console.error('DB ERROR =>', err);
+                    return res.status(500).json({
+                        success: false,
+                        message: 'Database error'
+                    });
+                }
+
+                return res.json({
+                    success: true
+                });
+            }
+        );
+
+    } catch (error) {
+        console.error('CONTROLLER ERROR =>', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Server crashed'
+        });
+    }
 };

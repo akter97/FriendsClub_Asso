@@ -88,3 +88,21 @@ exports.updatePaymentStatus = (paymentId, status, updatedBy) => {
         });
     });
 };
+
+
+exports.processPayment = (periodId, month, amount, status, callback) => {
+
+    const sql = `CALL process_payment(?, ?, ?, ?)`;
+
+    db.query(
+        sql,
+        [periodId, month, amount, status],
+        (err, result) => {
+            if (err) {
+                console.error('SP ERROR:', err);
+                return callback(err);
+            }
+            callback(null, result);
+        }
+    );
+};

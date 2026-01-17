@@ -6,16 +6,21 @@ const dashboardRepo = {
         const [result] = await promiseDb.query('CALL sp_GetMemberCounts()');
         return result[0][0];  
     },
+ 
 
-    getOverallStats: async () => {
-        const [result] = await promiseDb.query('CALL sp_GetOverallPaymentStats()');
-        return result[0][0];
+    
+// Overall Stats
+    getOverallStats: async (userId, roleId) => { 
+        const [result] = await promiseDb.query('CALL sp_GetOverallPaymentStats(?, ?)', [userId, roleId]); 
+        return result[0][0]; 
     },
 
-    getMonthlyStats: async () => {
-        const [result] = await promiseDb.query('CALL sp_GetMonthlyStats()');
+    // Monthly Stats
+    getMonthlyStats: async (userId, roleId) => {
+        const [result] = await promiseDb.query('CALL sp_GetMonthlyStats(?, ?)', [userId, roleId]);
         return result[0][0];
-    },
+    }, 
+
 
     getWeeklyStats: async () => {
         const [result] = await promiseDb.query('CALL sp_GetWeeklyStats()');
