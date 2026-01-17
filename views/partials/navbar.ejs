@@ -1,313 +1,279 @@
+ <style>
+    /* Base Body Adjustment */
+    body {
+        margin: 0;
+        padding-bottom: 80px;
+        min-height: 100vh;
+        box-sizing: border-box;
+    }
 
-<style>
-  /* Base Body Adjustment */
-  body {
-    margin: 0;
-    padding-bottom: 80px; /* Navbar-er jate content dhaka na pore */
-    min-height: 100vh;
-    box-sizing: border-box;
-  }
+    /* Container positioning */
+    .profile-menu-container, .setup-menu-container {
+        position: relative;
+        list-style: none;        
+    } 
 
-/* Container positioning */
-.profile-menu-container {
-  position: relative;
-  list-style: none;
-}
-
-/* Modal Styling */
-.profile-modal {
-  display: none;
-  position: absolute;
-  bottom: 60px;
-  right: 0px;
-  width: 220px;
-
-  background: #241d55e5; /* Light background */
-  border-radius: 12px;
-
-  /* Stronger / deeper shadow */
-  box-shadow: 
-    0 8px 15px rgba(168, 132, 132, 0.2),   /* subtle base shadow, thik thak alpha */
-    0 15px 30px rgba(73, 50, 50, 0.25),    /* medium depth */
-    0 25px 40px rgba(0,0,0,0.35);          /* deep shadow for floating effect */
-  
-  z-index: 1000;
-  overflow: hidden;
-  animation: slideUp 0.3s ease;
-}
-.setup-menu-container {
-  position: relative;
-  list-style: none;
-}
-/* Modal Styling */
-.setup-modal {
-  display: none;
-  position: absolute;
-  bottom: 60px;
-  left: 0px;
-  width: 220px;
-
-  background: #241d55a2; 
-  border-radius: 12px; 
-  box-shadow: 
-    0 8px 15px rgba(168, 132, 132, 0.2),   
-    0 15px 30px rgba(73, 50, 50, 0.25),    
-    0 25px 40px rgba(0,0,0,0.35);    
-  
-  z-index: 1000;
-  overflow: hidden;
-  animation: slideUp 0.3s ease;
-}
+    /* Modal Styling - Shared for all */
+    .profile-modal, .payment-modal {
+        display: none;
+        position: absolute;
+        bottom: 70px; /* Fixed height for consistent look */
+        width: 220px;
+        background: #241d55e5;
+        border-radius: 12px;
+        box-shadow: 
+            0 8px 15px rgba(168, 132, 132, 0.2),
+            0 15px 30px rgba(73, 50, 50, 0.25),
+            0 25px 40px rgba(0,0,0,0.35);
+        z-index: 1000;
+        overflow: hidden;
+        animation: slideUp 0.3s ease;
+    }
+     .setup-modal {
+        display: none;
+        position: absolute;
+        bottom: 70px; /* Fixed height for consistent look */
+        width: 220px;
+        background: #241d55e5;
+        border-radius: 12px;
+        box-shadow: 
+            0 8px 15px rgba(168, 132, 132, 0.2),
+            0 15px 30px rgba(73, 50, 50, 0.25),
+            0 25px 40px rgba(0,0,0,0.35);
+        z-index: 1000;
+        overflow: hidden;
+        animation: slideUp 0.3s ease;
+    }
 
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+    /* Specific Alignments */
+    .profile-modal { right: 0px; } 
+    .payment-modal { left: 0%; }  
 
-.modal-header {
-  padding: 5px;
-  background: #f8fafc;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid #edf2f7;
-}
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-.modal-header img {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  object-fit: cover;
-}
+    .modal-body { padding: 10px; }
 
-.modal-header small { color: #48bb78; display: block; font-size: 11px; }
+    .modal-btn {
+        display: flex;
+        align-items: center; /* Adjusted for better alignment */
+        gap: 12px;
+        padding: 10px 15px;
+        text-decoration: none;
+        color: #ffffff; /* Consistent white text */
+        font-size: 14px;
+        border-radius: 8px;
+        transition: 0.2s;
+    }
 
-.modal-body { padding: 10px; }
+    .modal-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffd700;
+    }
 
-.modal-btn {
-  display: flex;
-  align-items: left;
-  gap: 12px;
-  padding: 10px 15px;
-  text-decoration: none;
-  color: #4a5568;
-  font-size: 14px;
-  border-radius: 8px;
-  transition: 0.2s;
-}
+    .modal-btn i { width: 16px; text-align: center; }
 
-.modal-btn:hover {
-  background: #f1f5f9;
-  color: #667eea;
-}
+    .logout-btn { color: #ff4d4d !important; }
+    .logout-btn:hover { background: rgba(255, 77, 77, 0.1) !important; color: #ff4d4d !important; }
 
-.modal-btn i { width: 16px; text-align: center; }
+    hr { border: 0; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 8px 0; }
 
-.logout-btn { color: #e53e3e; }
-.logout-btn:hover { background: #fff5f5; color: #c53030; }
+    /* --- Glossy Bottom Navbar --- */
+    .navbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(7, 0, 0, 0.686);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 12px 0;
+        z-index: 2000;
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+    }
 
-hr { border: 0; border-top: 1px solid #edf2f7; margin: 8px 0; }
+    .nav-links {
+        list-style: none;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 0;
+    }
 
-  /* --- Glossy Bottom Navbar --- */
-  .navbar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(7, 0, 0, 0.686); /* Glassmorphism effect */
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 12px 0;
-    z-index: 2000;
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
-  }
+    .nav-links li { flex: 1; text-align: center; }
 
-  .nav-links {
-    list-style: none;
-    display: flex;
-    justify-content: space-around; /* Icon gulo soman bhabe thakbe */
-    align-items: center;
-    max-width: 600px; /* Desktop-e ektu choto thakbe */
-    margin: 0 auto;
-    padding: 0;
-  }
-
-  .nav-links li {
-    flex: 1;
-    text-align: center;
-  }
-
-  .nav-links li a {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 12px; /* Mobile standard size */
-    font-weight: 500;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px; /* Icon ar text-er durotto */
-    transition: all 0.3s ease;
-  }
-
-  /* Icon size styling */
-  .nav-icon {
-    font-size: 22px;
-    margin-bottom: 2px;
-  }
-
-  /* Active/Hover State */
-  .nav-links li a:hover {
-    color: #ffd700; /* Gold color on hover */
-    transform: translateY(-5px);
-  }
-
-  /* Dashboard logic-er upor vitti kore active class add kora jabe */
-  .nav-links li a.active {
-    color: #00d2ff;
-  }
-.setup-modal {
-  left: 0;
-  bottom: 70px; /* Navbar theke ektu upore */
-}
-
-.profile-modal {
-  right: 0;
-  bottom: 70px;
-}
-  /* Responsive styling for Mobile */
-  @media (max-width: 480px) {
     .nav-links li a {
-      font-size: 11px;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 12px;
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        transition: all 0.3s ease;
     }
-    .nav-icon {
-      font-size: 20px;
+
+    .nav-icon { font-size: 22px; margin-bottom: 2px; }
+
+    .nav-links li a:hover { color: #ffd700; transform: translateY(-5px); }
+
+    @media (max-width: 480px) {
+        .nav-links li a { font-size: 11px; }
+        .nav-icon { font-size: 20px; }
+        .payment-modal { left: -30px; width: 200px; }  
+        .setup-modal { left: -60px; width: 190px; }  
     }
-  }
 </style>
 
 <nav class="navbar">
-  <ul class="nav-links">    
-    
-    <li>
-      <a href="/dashboard">
-        <span class="nav-icon"><i class="fas fa-dashboard"></i></span>
-        <span>Dashboard</span>
-      </a>
-    </li> 
-    <% if (user && user.roleId == 2) { %>
+    <ul class="nav-links">
         <li>
-              <a href="/payment">
-                <span class="nav-icon"><i class="fas fa-credit-card"></i></span>
-                <span>Payment</span>
-              </a>
-            </li>
-      
-        
-        <li class="profile-menu-container">
-          <a href="javascript:void(0)" id="profileMenuBtn">
-            <span class="nav-icon"> <i class="fas fa-user-circle"></i></span>
-            <span>Profile</span> 
-          </a>
-
-          <div id="profileModal" class="profile-modal"> 
-            <div class="modal-body">       
-              <a href="/profile/personal-info" class="modal-btn">
-                <i class="fas fa-id-card"></i> Personal Info
-              </a>
-              <a href="/change-password" class="modal-btn">
-                <i class="fas fa-key"></i> Change Password
-              </a>
-              <hr>
-              <a href="/logout" class="modal-btn logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Logout
-              </a>
-            </div>
-          </div>
+            <a href="/dashboard">
+                <span class="nav-icon"><i class="fas fa-th-large"></i></span>
+                <span>Dashboard</span>
+            </a>
         </li>
-    <% } %>
 
-    <% if (user && user.roleId == 1) { %>
-        <li>
-              <a href="/payment Request">
-                <span class="nav-icon">
-                  <i class="fas fa-file-invoice-dollar"></i>
-                </span>
-                <span>Payment Request</span>
-              </a>
+        <% if (user && user.roleId == 2) { %>
+            <li>
+                <a href="/payment">
+                    <span class="nav-icon"><i class="fas fa-credit-card"></i></span>
+                    <span>Payment</span>
+                </a>
+            </li>
+            <li class="profile-menu-container">
+                <a href="javascript:void(0)" id="profileMenuBtn">
+                    <span class="nav-icon"><i class="fas fa-user-circle"></i></span>
+                    <span>Profile</span>
+                </a>
+                <div id="profileModal" class="profile-modal">
+                    <div class="modal-body">
+                        <a href="/profile/personal-info" class="modal-btn">
+                            <i class="fas fa-id-card"></i> Personal Info
+                        </a>
+                        <a href="/change-password" class="modal-btn">
+                            <i class="fas fa-key"></i> Change Password
+                        </a>
+                        <hr>
+                        <a href="/logout" class="modal-btn logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </li>
+        <% } %>
+
+        <% if (user && user.roleId == 1) { %>
+            <li class="profile-menu-container">
+                <a href="javascript:void(0)" id="paymentMenuBtn">
+                    <span class="nav-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                    <span>Payment</span>
+                </a>
+                <div id="paymentModal" class="payment-modal">
+                    <div class="modal-body">
+                        <a href="/payment" class="modal-btn">
+                            <i class="fas fa-hand-holding-usd"></i> Payment Request
+                        </a>
+                        <a href="/payment-approved" class="modal-btn">
+                            <i class="fas fa-file-signature"></i> Payment Approved
+                        </a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="setup-menu-container">
+                <a href="javascript:void(0)" id="setupMenuBtn">
+                    <span class="nav-icon"><i class="fas fa-gear"></i></span>
+                    <span>Setup</span>
+                </a>
+                <div id="setupModal" class="setup-modal">
+                    <div class="modal-body">
+                        <a href="/users" class="modal-btn">
+                            <i class="fas fa-user-plus"></i> New Users
+                        </a>
+                        <a href="/period" class="modal-btn">
+                            <i class="fas fa-calendar-check"></i> Period
+                        </a>
+                        <a href="/shere_member" class="modal-btn">
+                            <i class="fas fa-users"></i> Share Member
+                        </a>
+                        <hr>
+                        <a href="/logout" class="modal-btn logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
             </li> 
             
-     <li class="setup-menu-container">
-    <a href="javascript:void(0)" id="setupMenuBtn">
-      <span class="nav-icon"> <i class="fas fa-gear"></i></span>
-      <span>Setup</span> 
-    </a>
-
-  <div id="setupModal" class="setup-modal"> 
-    <div class="modal-body">
-       <a href="/users"class="modal-btn">
-        <i class="fas fa-id-card"></i> New Users
-      </a> 
-      <a href="/period" class="modal-btn">
-        <i class="fas fa-calendar-check"></i> Period
-      </a>
-      <a href="/shere_member" class="modal-btn">
-        <i class="fas fa-calendar-check"></i> Shere Member
-      </a>
-     <hr>
-              <a href="/logout" class="modal-btn logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Logout
-              </a>
-    </div>
-  </div>
-     </li> 
-
-<% } %>
-   
-  </ul>
+        <% } %>
+    </ul>
 </nav>
- <script>
-document.addEventListener('DOMContentLoaded', function () {
-  
-  // Elements
-  const profileBtn = document.getElementById('profileMenuBtn');
-  const profileModal = document.getElementById('profileModal');
-  const setupBtn = document.getElementById('setupMenuBtn');
-  const setupModal = document.getElementById('setupModal');
 
-  // helper function to close all
-  function closeAll() {
-    if (profileModal) profileModal.style.display = 'none';
-    if (setupModal) setupModal.style.display = 'none';
-  }
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const profileBtn = document.getElementById('profileMenuBtn');
+        const profileModal = document.getElementById('profileModal');
+        const setupBtn = document.getElementById('setupMenuBtn');
+        const setupModal = document.getElementById('setupModal');
+        const paymentBtn = document.getElementById('paymentMenuBtn');
+        const paymentModal = document.getElementById('paymentModal');
 
-  /* ---------- PROFILE MODAL LOGIC ---------- */
-  if (profileBtn && profileModal) {
-    profileBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      const isVisible = profileModal.style.display === 'block';
-      closeAll(); // Age baki sob bondho korbe
-      profileModal.style.display = isVisible ? 'none' : 'block';
+        // Combined close function
+        function closeAll() {
+            if (profileModal) profileModal.style.display = 'none';
+            if (setupModal) setupModal.style.display = 'none';
+            if (paymentModal) paymentModal.style.display = 'none';
+        }
+
+        // Handle Profile Click
+        if (profileBtn && profileModal) {
+            profileBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                const isOpen = profileModal.style.display === 'block';
+                closeAll();
+                profileModal.style.display = isOpen ? 'none' : 'block';
+            });
+        }
+
+        // Handle Setup Click
+        if (setupBtn && setupModal) {
+            setupBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                const isOpen = setupModal.style.display === 'block';
+                closeAll();
+                setupModal.style.display = isOpen ? 'none' : 'block';
+            });
+        }
+
+        // Handle Payment Click
+        if (paymentBtn && paymentModal) {
+            paymentBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                const isOpen = paymentModal.style.display === 'block';
+                closeAll();
+                paymentModal.style.display = isOpen ? 'none' : 'block';
+            });
+        }
+
+        // Prevent closing when clicking inside any modal content
+        [profileModal, setupModal, paymentModal].forEach(modal => {
+            if (modal) {
+                modal.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                });
+            }
+        });
+
+        // Close on outside click
+        document.addEventListener('click', function () {
+            closeAll();
+        });
     });
-    profileModal.addEventListener('click', e => e.stopPropagation());
-  }
-
-  /* ---------- SETUP MODAL LOGIC ---------- */
-  if (setupBtn && setupModal) {
-    setupBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      const isVisible = setupModal.style.display === 'block';
-      closeAll(); // Age baki sob bondho korbe
-      setupModal.style.display = isVisible ? 'none' : 'block';
-    });
-    setupModal.addEventListener('click', e => e.stopPropagation());
-  }
-
-  /* ---------- OUTSIDE CLICK CLOSE ---------- */
-  document.addEventListener('click', function () {
-    closeAll();
-  });
-
-});
 </script>

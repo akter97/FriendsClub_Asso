@@ -1,0 +1,358 @@
+ <style>
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --primary-glow: #00d2ff;
+    --success-glow: #00ff87;
+    --danger-glow: #ff4b2b;
+    --card-bg: #052048cb;
+}
+body{
+    padding: 0px 20px;
+}
+/* Admin Card Container */
+.admin-card {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 30px;
+    background: var(--card-bg);
+    border-radius: 24px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.section-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.section-title i { color: var(--primary-glow); }
+
+/* Search Input Styling */
+.search-wrapper {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.search-wrapper i {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+}
+
+.search-input {
+    width: 100%;
+    padding: 14px 14px 14px 50px;
+    background: #1c1f24;
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    color: #fff;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-glow);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.1);
+}
+
+/* Table Design */
+.custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+.custom-table th {
+    padding: 15px 20px;
+    text-align: left;
+    color: #888;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.custom-table tbody tr {
+    background: var(--glass-bg);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.custom-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.07);
+    transform: translateY(-2px);
+}
+
+.custom-table td {
+    padding: 18px 20px;
+    color: #e0e0e0;
+    border-top: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.custom-table td:first-child { border-left: 1px solid var(--glass-border); border-radius: 12px 0 0 12px; }
+.custom-table td:last-child { border-right: 1px solid var(--glass-border); border-radius: 0 12px 12px 0; }
+
+/* Badges & Actions */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-paid { background: rgba(0, 255, 135, 0.1); color: var(--success-glow); }
+.status-cancelled { background: rgba(255, 75, 43, 0.1); color: var(--danger-glow); }
+.status-pending { background: rgba(255, 193, 7, 0.1); color: #ffc107; }
+
+.action-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.action-icon {
+    font-size: 20px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.action-icon:hover { transform: scale(1.2); filter: brightness(1.2); }
+
+/* Modal Styling */
+.modal {
+    color: rgba(186, 180, 180, 0.819);
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+}
+ 
+
+.modal-content {
+    color: white;
+    background: #036ffc6e;
+    width: 90%;
+    max-width: 550px;
+    margin: 50px auto;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.modal-header { 
+    padding: 20px 25px;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detail-grid {
+    padding: 25px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.info-box label { display: block; color: #fffdfd; font-size: 12px; margin-bottom: 5px; text-transform: uppercase; }
+.info-box span { display: block; color: #fff; font-weight: 500; font-size: 15px; }
+
+.receipt-container { padding: 0 25px 25px; }
+.receipt-img { width: 100%; border-radius: 12px; border: 1px solid var(--glass-border); cursor: zoom-in; }
+
+#pendingSearch , #historySearch{
+    width: 85%;
+    height: auto;
+    margin: auto;
+}
+</style>
+
+<div class="admin-card">
+    <div class="section-header">
+        <div class="section-title"><i class="fas fa-spinner"></i> Pending Approvals</div>
+    </div>
+    <div class="search-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" id="pendingSearch" class="search-input" placeholder="Search pending by code or amount...">
+    </div>
+    <div class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th style="text-align:center">Action</th>
+                </tr>
+            </thead>
+            <tbody id="pendingBody">
+                <% if (pendingList && pendingList.length > 0) { %>
+                    <% pendingList.filter(r => r.status === 'Pending').forEach(row => { %>
+                    <tr onclick="viewDetails(this)">
+                        <td data-id="<%= row.id %>" 
+                            data-name="<%= row.member_name %>" 
+                            data-amount="<%= row.amount %>" 
+                            data-date="<%= row.payment_date ? new Date(row.payment_date).toLocaleDateString() : 'N/A' %>"
+                            data-status="<%= row.status %>"
+                            data-reference="<%= row.reference_name || '-' %>">
+                            <%= row.member_name || 'N/A' %>
+                        </td>
+                        <td><%= row.payment_date ? new Date(row.payment_date).toLocaleDateString() : 'N/A' %></td>
+                        <td style="color:var(--primary-glow); font-weight:600"><%= row.amount %> ৳</td>
+                        <td onclick="event.stopPropagation()">
+                            <div class="action-group">
+                                <i class="fas fa-check-circle action-icon" style="color:var(--success-glow)"
+                                onclick="updateStatus(<%= row.id %>, 'Paid')"></i>
+                                <i class="fas fa-times-circle action-icon" style="color:var(--danger-glow)"
+                                onclick="updateStatus(<%= row.id %>, 'Cancelled')"></i>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr><td colspan="4" style="text-align:center; padding:40px; color:#666">No pending requests found</td></tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- History Table -->
+    <div class="section-header" style="margin-top: 50px;">
+        <div class="section-title"><i class="fas fa-history"></i> Payment Logs</div>
+    </div>
+    <div class="search-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" id="historySearch" class="search-input" placeholder="Search history records...">
+    </div>
+    <div class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th style="text-align:right">Ref</th>
+                </tr>
+            </thead>
+            <tbody id="historyBody">
+                <% if (pendingList && pendingList.some(r => r.status !== 'Pending')) { %>
+                    <% pendingList.filter(r => r.status === 'Paid' || r.status === 'Cancelled').forEach(row => { %>
+                    <tr onclick="viewDetails(this)">
+                        <td data-id="<%= row.id %>" 
+                            data-name="<%= row.member_name %>" 
+                            data-amount="<%= row.amount %>" 
+                            data-date="<%= row.payment_date ? new Date(row.payment_date).toLocaleDateString() : 'N/A' %>"
+                            data-status="<%= row.status %>"
+                            data-reference="<%= row.reference_name || '-' %>">
+                            <%= row.member_name || 'N/A' %>
+                        </td>
+                        <td style="color:var(--primary-glow); font-weight:600"><%= row.amount %> ৳</td>
+                        <td><span class="status-badge <%= row.status === 'Paid' ? 'status-paid' : 'status-cancelled' %>"><%= row.status %></span></td>
+                        <td style="text-align:right; color:#888; font-size:13px"><%= row.reference_name || '—' %></td>
+                    </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr><td colspan="4" style="text-align:center; padding:40px; color:#666">No payment history found</td></tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Detail Modal -->
+<div id="detailModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Payment / Member Details</h3>
+            <span style="cursor:pointer; font-size:18px" onclick="closeModal()">✖</span>
+        </div>
+        <div class="detail-grid" id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    setupSearch('pendingSearch', 'pendingBody');
+    setupSearch('historySearch', 'historyBody');
+});
+
+function setupSearch(inputId, bodyId) {
+    document.getElementById(inputId).addEventListener('keyup', function() {
+        const filter = this.value.toLowerCase();
+        const rows = document.querySelectorAll(`#${bodyId} tr`);
+        rows.forEach(row => row.style.display = row.innerText.toLowerCase().includes(filter) ? '' : 'none');
+    });
+}
+
+// View details modal
+function viewDetails(rowElem) {
+    const td = rowElem.querySelector('td');
+    const id = td.dataset.id;
+    const name = td.dataset.name;
+    const amount = td.dataset.amount;
+    const date = td.dataset.date;
+    const status = td.dataset.status;
+    const reference = td.dataset.reference;
+
+    // Populate modal
+    const modalBody = document.getElementById('modalBody');
+    modalBody.innerHTML = ` 
+        <div class="info-box"><label>Name</label><span>${name}</span></div>
+        <div class="info-box"><label>Amount</label><span>${amount} ৳</span></div>
+        <div class="info-box"><label>Date</label><span>${date}</span></div>
+        <div class="info-box"><label>Status</label><span>${status}</span></div>
+        <div class="info-box"><label>Reference</label><span>${reference}</span></div>
+    `;
+    document.getElementById('detailModal').style.display = 'block';
+}
+
+// Close modal
+function closeModal() {
+    document.getElementById('detailModal').style.display = 'none';
+}
+function updateStatus(paymentId,newStatus){ 
+    alert(newStatus);
+    const userId = 0;  
+    fetch(`/update-status`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentId, status: newStatus})
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success) {
+            alert('Status updated!');
+            location.reload();  
+        } else {
+            alert('Update failed!');
+        }
+    });
+}
+window.onclick = function(event) {
+    const modal = document.getElementById('detailModal');
+    if (event.target === modal) modal.style.display = 'none';
+}
+</script>

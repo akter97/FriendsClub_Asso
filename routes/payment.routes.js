@@ -21,4 +21,7 @@ router.post("/payment", upload.single("receipt_image"), paymentController.postPa
 router.get("/payment-history-data", paymentController.getPaymentHistory); 
 router.delete("/payment/delete/:id", paymentController.postDeletePayment);
 
+
+router.get("/payment-approved", paymentController.getPaymentRequestPage);
+router.post('/update-status', paymentController.updateStatus);
 module.exports = router;

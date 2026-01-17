@@ -9,7 +9,10 @@ const shereMemberRoutes = require('./routes/shereMember.route');
 const paymentRoutes = require("./routes/payment.routes");
 const app = express();
 
- 
+ app.use((req, res, next) => {
+    res.locals.user = req.user || null;  
+    next();
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -40,7 +43,7 @@ const isAuth = (req, res, next) => {
     }
 };
 
-//  Routes Setup
+//  Routes Setup 
 app.use("/", authRoutes);  
 app.use("/", userRoutes); 
 app.use('/period', periodRoutes);

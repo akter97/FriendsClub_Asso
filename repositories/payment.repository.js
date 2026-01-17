@@ -1,25 +1,29 @@
 const db = require("../config/db");
 
 // Form load korar jonno dorkari sob data eksathe ana
-exports.getPaymentFormData = (userId, callback) => {
-    // Query 1: User-er sathe join kore tar shere_member code gulo ana
-    const memberCodesQuery = `SELECT id as member_id, MemberCode FROM users `
-     
-
-
-    const referencesQuery = "SELECT id, name FROM users WHERE id != ?";
-
-    db.query(memberCodesQuery, [userId], (err, codes) => {
-        if (err) return callback(err);
-        
+ exports.getPaymentFormData = (userId, roleId, callback) => {
+    let memberCodesQuery = "";
+    let queryParams = [];
+ 
+    if (roleId == 1) { 
+        memberCodesQuery = "SELECT id as member_id, MemberCode FROM users";
+        queryParams = [];
+    } else { 
+        memberCodesQuery = "SELECT id as member_id, MemberCode FROM users WHERE id = ?";
+        queryParams = [userId];
+    }
+ 
+    db.query(memberCodesQuery, queryParams, (err, codes) => {
+        if (err) return callback(err); 
+        const referencesQuery = "SELECT id, name FROM users WHERE id != ?";
         db.query(referencesQuery, [userId], (err, refs) => {
-            if (err) return callback(err);
-            
+            if (err) return callback(err); 
             callback(null, { codes, refs });
         });
     });
 };
- 
+
+
  exports.savePayment = (data, callback) => {
     console.log("Saving following array to DB:", data);
     
@@ -50,4 +54,37 @@ exports.deletePaymentById = (paymentId, userId, callback) => {
     // Shudhu nijer payment delete korar permission thakbe (Security)
     const sql = "DELETE FROM payments WHERE id = ? AND member_id = ? and status='Pending'";
     db.query(sql, [paymentId, userId], callback);
+};
+ 
+exports.getPaymentFormDataRequest = (userId, roleId, callback) => { 
+    const query = `
+    SELECT 
+    p.*,
+    u.name AS member_name,
+    r.name AS reference_name
+FROM payments AS p
+INNER JOIN users AS u ON p.member_id = u.id
+LEFT JOIN users AS r ON p.member_id = r.id
+ORDER BY p.id DESC
+    `; 
+    db.query(query, (err, results) => {
+        if (err) {
+            return callback(err, null);
+        }
+         console.log(results);
+        callback(null, {
+            pendingPayments: results, 
+            codes: results.map(row => row.shere_number), 
+            refs: results.map(row => row.reference)
+        });
+    });
+};
+exports.updatePaymentStatus = (paymentId, status, updatedBy) => {    
+    return new Promise((resolve, reject) => {
+        const query = `CALL sp_UpdatePaymentStatus(?, ?, ?)`;
+        db.query(query, [paymentId, status, updatedBy], (err, results) => {
+            if(err) return reject(err);
+             resolve(results[0][0]);// first result set
+        });
+    });
 };

@@ -4,11 +4,11 @@ const paymentRepo = require('../repositories/payment.repository');
     // Session check
     if (!req.session || !req.session.user) {
         return res.redirect('/login');
-    }
-
+    } 
     const userId = req.session.user.id;
+    const roleId = req.session.user.roleId;
 
-    paymentRepo.getPaymentFormData(userId, (err, data) => {
+    paymentRepo.getPaymentFormData(userId,roleId, (err, data) => {
         if (err) {
             console.error("Repository Error:", err);
             return res.status(500).send("Database connection error or query failed.");
@@ -30,12 +30,9 @@ const paymentRepo = require('../repositories/payment.repository');
     const { 
         member_id,share_number, payment_date, payment_method, 
         reference, transaction_id, amount, remarks, payment_status 
-    } = req.body;
-console.log(req.body);
+    } = req.body; 
     //const member_id = req.session.user.id;
-    const receipt_image = req.file ? req.file.filename : null;
-
-    // Cash hole transaction_id null hobe, nahole input value nibe
+    const receipt_image = req.file ? req.file.filename : null; 
     const finalTransactionId = (payment_method === 'Cash') ? null : transaction_id;
 
     const paymentData = [
@@ -77,4 +74,46 @@ exports.postDeletePayment = (req, res) => {
         if (err) return res.status(500).json({ success: false, message: "Delete failed" });
         res.json({ success: true, message: "Payment deleted successfully" });
     });
+};
+ exports.getPaymentRequestPage = (req, res) => {
+    if (!req.session || !req.session.user) {
+        return res.redirect('/login');
+    } 
+    
+    const userId = req.session.user.id;
+    const roleId = req.session.user.roleId;
+
+    paymentRepo.getPaymentFormDataRequest(userId, roleId, (err, data) => {
+        if (err) {
+            console.error("Repository Error:", err);
+            return res.status(500).send("Database error.");
+        } 
+
+        res.render('pages/payment_approved', {
+            title: "Payment Accept Request", 
+            pendingList: data.pendingPayments || [],
+            user: req.session.user,
+            hideNavbar: false,
+            error: null,
+            success: null
+        });
+    });
+};
+exports.updateStatus = async (req, res) => {
+    
+    try {
+        const userId = req.session.user.id;
+        const { paymentId, status } = req.body;
+       
+        const result = await paymentRepo.updatePaymentStatus(paymentId, status, userId);
+
+        if(result.affectedRows > 0) {
+            res.json({ success: true });
+        } else {
+            res.json({ success: false });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
 };
