@@ -1,172 +1,151 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | FriendsClub</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root {
-            --primary: #667eea;
-            --bg: #f4f7fe; 
-            --text: #2d3748;
-        }
+<style>
+    :root {
+        --primary: #667eea;
+        --bg: #1a1639; /* Dark background for premium feel */
+        --card-bg: #241d55;
+        --text: #ffffff;
+    }
 
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            padding: 20px;
-            box-sizing: border-box;
-        }
+    body {
+        margin: 10px   !important;
+        padding: 10px;
+        font-family: 'Segoe UI', sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        padding: 20px;
+    }
 
-        /* Header logic */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            flex-wrap: nowrap; /* Header jeno na bhenge jay */
-        }
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
 
-        .section-header h1 { font-size: 20px; margin: 0; }
-        .section-header p { color: #241d55b3; font-size: 14px; margin-top: 5px; }
+    .section-header h1 { font-size: 22px; margin: 0; color: #fff; }
+    .section-header p { color: rgba(255,255,255,0.7); font-size: 14px; }
 
-        /* Stats Grid Logic - FIX FOR MOBILE */
-        .stats-grid {
-            display: grid;
-            /* Desktop-e 3 column */
-            grid-template-columns: repeat(3, 9fr); 
-            gap: 15px;
-            margin-bottom: 30px;
+    .stats-gridtop,.stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 12px;
+        margin-bottom: 20px;
+    }
 
-        }
- 
+    .stat-card {
+        background: var(--card-bg);
+        padding: 15px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
 
-        .stat-card {
-            background: #fff;
-            padding: 5px;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+    .stat-icon {
+        width: 35px; height: 35px;
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-size: 16px;
+    }
 
-        .stat-icon {
-            width: 25px;
-            height: 25px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            color: #fff;
-            flex-shrink: 0;
-        }
+    .stat-card h3 { margin: 0; font-size: 18px; }
+    .stat-card small { color: rgba(255,255,255,0.6); display: block; }
 
-        .stat-card h3 { margin: 0; font-size: 18px; }
-        .stat-card small { color: #241d55b3; font-weight: 500; }
+    h2 { font-size: 18px; margin: 20px 0 10px; border-left: 4px solid var(--primary); padding-left: 10px; }
 
-        /* Content Cards */
-        .glass-card {
-            background: #fff;
-            padding: 10px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            margin-bottom: 10px;
-        }
+    .glass-card {
+        background: var(--card-bg);
+        padding: 15px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+    }
 
-        .glass-card h3 { margin: 0; font-size: 16px; color: var(--text); }
-        h2{
-            padding: 0px;
-            color: white;
-            text-align: center;
-        }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+    th { text-align: left; color: rgba(255,255,255,0.5); padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-    </style>
-</head>
-<body>
+    @media (max-width: 480px) {
+        .stats-grid { grid-template-columns: repeat(2, 2fr); } /* Mobile-e single column */
+        .stats-gridtop { grid-template-columns: repeat(3, 1fr); } /* Mobile-e single column */
+    }
+</style>
 
-    <div class="main-content">
-        <div class="section-header">
-            <div style="color:white">
-                <h1>Welcome Back, Admin!</h1>
-                <p style="color:white">Here's what's happening today friends.</p>
-            </div>
-            <img src="/Image/default.jpg" width="45" height="45" style="border-radius: 50%; object-fit: cover;">
+<div class="main-content">
+    <div class="section-header">
+    <div style="color:white">
+        <h1>Welcome Back, <%= user.name %>!</h1> 
+        <p style="color:white">Here's what's happening today friends.</p>
+    </div>
+    <img src="/Image/ProfilePicture/<%=user.Picture %>" 
+         width="45" height="45" 
+         style="border-radius: 50%; border: 2px solid var(--primary); object-fit: cover;">
+</div>
+
+    <div class="stats-gridtop">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #667eea;"><i class="fas fa-users"></i></div>
+            <div><small>Members</small><h3><%= dashboardData.dashboardStats.members %></h3></div>
         </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #667eea;"><i class="fas fa-users"></i></div>
-                <div><small>Members</small><h3>32</h3></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #ed8936;"><i class="fas fa-user-shield"></i></div>
-                <div><small>Admins</small><h3>2</h3></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #48bb78;"><i class="fas fa-check-circle"></i></div>
-                <div><small>Active</small><h3>12</h3></div>
-            </div>
-            </div> 
-            <h2>Total</h2>
-            <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #38b2ac;"><i class="fas fa-money-bill"></i></div>
-                <div><small>Cash</small><h3>320,000</h3></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #f56565;"><i class="fas fa-hand-holding-usd"></i></div>
-                <div><small>Due</small><h3>1,200</h3></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #9f7aea;"><i class="fas fa-coins"></i></div>
-                <div><small>Max Cash</small><h3>320,000</h3></div>
-            </div>
-            </div> 
-            <h2>Monthly</h2>
-            <div class="stats-grid"> 
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #38b2ac;"><i class="fas fa-money-bill"></i></div>
-                <div><small>Cash</small><h3>320,000</h3></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #f56565;"><i class="fas fa-hand-holding-usd"></i></div>
-                <div><small>Due</small><h3>1,200</h3></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #9f7aea;"><i class="fas fa-coins"></i></div>
-                <div><small>Max Cash</small><h3>320,000</h3></div>
-            </div>
-            </div> 
-            <h2>Weekly</h2>  
-            <div class="stats-grid">            
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #38b2ac;"><i class="fas fa-money-bill"></i></div>
-                <div><small>Cash</small><h3>320,000</h3></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #f56565;"><i class="fas fa-hand-holding-usd"></i></div>
-                <div><small>Due</small><h3>1,200</h3></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #9f7aea;"><i class="fas fa-coins"></i></div>
-                <div><small>Max Cash</small><h3>320,000</h3></div>
-            </div>
-
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #ed8936;"><i class="fas fa-user-shield"></i></div>
+            <div><small>Admins</small><h3><%= dashboardData.dashboardStats.admins %></h3></div>
         </div>
-
-        <div class="glass-card">
-            <h3>Recent Payment</h3>
-        </div>
-
-        <div class="glass-card">
-            <h3>Today's Payment</h3>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #48bb78;"><i class="fas fa-check-circle"></i></div>
+            <div><small>Active</small><h3><%= dashboardData.dashboardStats.active %></h3></div>
         </div>
     </div>
+
+    <h2>Overall Summary</h2>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #38b2ac;"><i class="fas fa-wallet"></i></div>
+            <div><small>Cash</small><h3><%= dashboardData.dashboardStats.cash %></h3></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #f56565;"><i class="fas fa-exclamation-circle"></i></div>
+            <div><small>Due</small><h3 style="color: #ff8e8e;"><%= dashboardData.dashboardStats.due %></h3></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #9f7aea;"><i class="fas fa-chart-bar"></i></div>
+            <div><small>Max</small><h3><%= dashboardData.dashboardStats.maxCash %></h3></div>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="glass-card">
+            <h3 style="font-size: 14px;"><i class="fas fa-calendar-alt"></i> Monthly</h3>
+            <div style="margin-top:10px;">
+                <p style="margin:5px 0"><small>Cash:</small> <%= dashboardData.dashboardStats.monthly.cash %></p>
+                <p style="margin:5px 0"><small>Due:</small> <span style="color: #ff8e8e;"><%= dashboardData.dashboardStats.monthly.due %></span></p>
+            </div>
+        </div>
+        <div class="glass-card">
+            <h3 style="font-size: 14px;"><i class="fas fa-clock"></i> Weekly</h3>
+            <div style="margin-top:10px;">
+                <p style="margin:5px 0"><small>Cash:</small> <%= dashboardData.dashboardStats.weekly.cash %></p>
+                <p style="margin:5px 0"><small>Due:</small> <span style="color: #ff8e8e;"><%= dashboardData.dashboardStats.weekly.due %></span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <h3><i class="fas fa-history"></i> Recent Payments</h3>
+        <table>
+            <thead>
+                <tr><th>Member</th><th>Amount</th><th>Date</th></tr>
+            </thead>
+            <tbody>
+                <% dashboardData.recentPayments.slice(0, 5).forEach(p => { %>
+                <tr>
+                    <td><%= p.member_name %></td>
+                    <td><%= p.amount %></td>
+                    <td><%= new Date(p.payment_date).toLocaleDateString('en-GB') %></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
 <div style="height: 100px;"></div>
-</body>
-</html>

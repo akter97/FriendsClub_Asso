@@ -7,10 +7,19 @@ const userRoutes = require("./routes/user.routes");
 const periodRoutes = require("./routes/period.route");  
 const shereMemberRoutes = require('./routes/shereMember.route');
 const paymentRoutes = require("./routes/payment.routes");
+const dashboardRouter = require('./routes/dashboard.route');
 const app = express();
 
- app.use((req, res, next) => {
-    res.locals.user = req.user || null;  
+// ৩. Session Configuration
+app.use(session({
+    secret: 'friendsclub_secret', 
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 24 * 60 * 60 * 1000 }  
+}));
+app.use((req, res, next) => {
+    res.locals.user = req.session.user || null;  
+    res.locals.hideNavbar = false;  
     next();
 });
 app.use(express.json());
@@ -20,13 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use('/uploads', express.static(path.join(__dirname, 'public/Image/ProfilePicture/'))); 
 
-// ৩. Session Configuration
-app.use(session({
-    secret: 'friendsclub_secret', 
-    resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 }  
-}));
+
 
 // ৪. EJS + Layout setup
 app.set("view engine", "ejs");
@@ -44,6 +47,7 @@ const isAuth = (req, res, next) => {
 };
 
 //  Routes Setup 
+app.use("/dashboard",dashboardRouter);
 app.use("/", authRoutes);  
 app.use("/", userRoutes); 
 app.use('/period', periodRoutes);
