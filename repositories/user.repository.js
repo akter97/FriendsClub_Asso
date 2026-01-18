@@ -25,13 +25,13 @@ exports.addUser = (user, callback) => {
 };
 
 // Update User (Using Stored Procedure)
-exports.updateUser = (user, callback) => {
+exports.updateUser = (user, callback) => { 
   const sql = `CALL sp_update_user(?,?,?,?,?,?,?,?,?,?,?,?,?)`;
   const params = [
     user.id, user.roleId, user.name, user.email, user.password,
     user.MemberCode, user.FathersName, user.MothersName,
     user.MobileNo, user.PassportNo, user.Organization,
-    user.PresentAddress, user.Picture
+    user.PresentAddress, user.picture
   ];
   db.query(sql, params, callback);
 };

@@ -18,9 +18,8 @@ router.post(
   '/users',
   upload.single('Picture'),
   controller.addUser
-);
-router.post('/update', upload.single('Picture'), controller.updateUser); 
-
+); 
+router.post('/usersUpdate', upload.single('Picture'), controller.updateUser);
 
  
 router.get("/change-password", isAuth, controller.changePasswordPage);

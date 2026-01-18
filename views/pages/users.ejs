@@ -123,7 +123,7 @@ input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; borde
 </style>
 
 <div class="container">
-  <h2 style="color:hsl(0, 0%, 100%)"><i class="fas fa-user"></i> <em style="margin-left: 10px;">User Management</em></h2>
+  <h2 style="color:hsl(0, 0%, 100%);" ><i class="fas fa-user"></i> <em style="margin-left: 10px;">User Management</em></h2>
 
   <!-- User Form -->
   <form id="registrationForm" method="POST" action="/users" enctype="multipart/form-data">
@@ -322,7 +322,15 @@ document.querySelectorAll('.btn-edit').forEach(btn => {
     btn.addEventListener('click', e => {
         e.preventDefault(); 
         document.querySelectorAll('.form-step').forEach(s => s.style.display = 'block');
- 
+  // set + readonly
+        const memberCodeInput = document.getElementById('MemberCode');
+        memberCodeInput.value = btn.dataset.membercode || '';
+        memberCodeInput.readOnly = true;
+        memberCodeInput.style.backgroundColor = 'rgba(0, 0, 0, 0.36)';
+        document.getElementById('password').style.display='none';
+        document.getElementById('confirmPassword').style.display='none';
+        document.querySelectorAll('.form-step').forEach(s => s.style.display = 'block');
+
         userIdInput.value = btn.dataset.id;
         document.getElementById('roleId').value = btn.dataset.roleid || '';
         document.getElementById('name').value = btn.dataset.name || '';
@@ -354,20 +362,40 @@ document.querySelectorAll('.btn-edit').forEach(btn => {
 });
 
 // --- Update API Call ---
-updateBtn.addEventListener('click', (e) => {
+ updateBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    
-    if (passwordInput.value !== confirmPasswordInput.value) {
-        alert('❌ Passwords do not match');
-        return;
-    }
+
+    // Debug alert
+    alert(90);
 
     const formData = new FormData(form);
-    fetch('/users/update', {
+
+    // Log form data for debugging
+    for (let [key, value] of formData.entries()) {
+        if (value instanceof File) {
+            console.log(key, value.name);
+        } else {
+            console.log(key, value);
+        }
+    }
+
+    fetch('/usersUpdate', {
         method: 'POST',
         body: formData
     })
-    .then(r => r.json())
+    .then(async r => {
+        // Check content type
+        const contentType = r.headers.get('content-type');
+        let data;
+        if (contentType && contentType.includes('application/json')) {
+            data = await r.json();
+        } else {
+            const text = await r.text();
+            console.error('Expected JSON but got:', text);
+            throw new Error('Server did not return JSON.');
+        }
+        return data;
+    })
     .then(d => {
         if (d.success) {
             alert('✅ Updated successfully');

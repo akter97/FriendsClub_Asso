@@ -1,30 +1,30 @@
  
 const User = require("../models/user.model");
 const repo = require("../repositories/user.repository");
+const fs = require('fs');
+const path = require('path'); 
 
-// All Users Dekhar Jonno logic
-exports.getUsers = (req, res) => {
-  // ১. Prothome check korbe user login ki na
+
+exports.getUsers = (req, res) => { 
   if (!req.session.isLoggedIn) {
-    return res.redirect("/login"); // Login na thakle login page-e pathabe
+    return res.redirect("/login"); 
   }
 
   repo.getAllUsers((err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).send("Database Error");
-    }
-    // Dashboard ba onno page theke user list render kora
+    } 
     res.render("pages/users", { 
         users: result, 
         title: "User List", 
-        user: req.session.user, // Login kora user-er info
+        user: req.session.user,  
         hideNavbar: false 
     });
   });
 };
 
-// Notun User Add Korar Logic
+ 
  exports.addUser = (req, res) => {
   const user = {
     roleId: req.body.roleId,
@@ -60,28 +60,41 @@ exports.getUsers = (req, res) => {
         id, roleId, name, email, password, MemberCode,
         FathersName, MothersName, MobileNo,
         PassportNo, Organization, PresentAddress, OldPicture
-    } = req.body;
- 
+    } = req.body; 
     const picture = req.file ? req.file.filename : OldPicture;
  
+
+    // Delete old picture if new one uploaded
+    if (req.file && OldPicture && OldPicture !== 'default.png') {
+        const oldPath = path.join(__dirname, '../public/Image/ProfilePicture/', OldPicture);
+        fs.unlink(oldPath, (err) => {
+            if (err) console.error('Failed to delete old picture:', err);
+            else console.log('Old picture deleted:', OldPicture);
+        });
+    }
+
+
     const userData = {
         id, roleId, name, email, MemberCode,
         FathersName, MothersName, MobileNo,
         PassportNo, Organization, PresentAddress, picture
     };
- 
+
+    // Only update password if provided
     if (password && password.trim() !== '') {
         userData.password = password;
     } 
-    repo.updateUser(userData, (err, result) => {
+
+    // Use repo method
+    repo.updateUser(userData, (err, result) => { 
         if (err) {
-            console.error(err);
-            return res.json({ success: false, message: "Database Error" });
+            console.error(err); 
+            return res.status(500).send('User update failed');
         }
-         
-        res.json({ success: true, message: 'User updated successfully' });
+ res.json({ success: true, message: 'User updated successfully' }); 
     });
 };
+
 
 
 
@@ -95,16 +108,14 @@ exports.changePasswordPage = (req, res) => {
 // Password update handle korar jonno 
  exports.changePassword = (req, res) => {    
     const { old_password, new_password, confirm_password } = req.body;
-
-    // Session check (id undefined error bondho korar jonno)
+ 
     if (!req.session.user || !req.session.user.id) {
         return res.render('pages/change_password', { 
             title: 'Change Password', error: 'Please login first!', success: null 
         });
     }
 
-    const userId = req.session.user.id; 
-    // STEP 1: Repository theke user-er current data ana
+    const userId = req.session.user.id;  
     repo.getUserForValidation(userId, async (err, results) => {      
         if (err || results.length === 0) {
             return res.render('pages/change_password', { 
@@ -112,10 +123,7 @@ exports.changePasswordPage = (req, res) => {
             });
         }
  
-        const dbUser = results[0]; // Database theke pawa user
-
- 
-        // STEP 2: Old Password Match check kora (Bcrypt comparison)
+        const dbUser = results[0];   
         
         if (old_password!=dbUser.password) { 
             return res.render('pages/change_password', { 
@@ -133,9 +141,7 @@ exports.changePasswordPage = (req, res) => {
                     user: req.session.user,
                     hideNavbar: false 
                 });
-            }
-            console.log(202);
-            // Success Message pathano
+            } 
             res.render('pages/change_password', { 
                 title: 'Change Password', 
                 error: null, 
