@@ -8,12 +8,12 @@
     --card-bg: #052048cb;
 }
 body{
-    padding: 0px 20px;
+    padding: 0px 7px;
 }
 /* Admin Card Container */
 .admin-card {
     max-width: 1100px;
-    margin: 40px auto;
+    margin: 0px auto;
     padding: 30px;
     background: var(--card-bg);
     border-radius: 24px;
@@ -56,7 +56,7 @@ body{
 }
 
 .search-input {
-    width: 100%;
+    width: auto;
     padding: 14px 14px 14px 50px;
     background: #1c1f24;
     border: 1px solid var(--glass-border);
@@ -73,14 +73,23 @@ body{
 }
 
 /* Table Design */
+ 
+.table-responsive{
+  width: 100%;
+  overflow: scroll;
+  box-sizing: border-box;
+}
 .custom-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 8px;
+
+  box-sizing: border-box;
+  overflow-y: scroll;
+  border-collapse: collapse; margin-top: 15px;
 }
 
+
+
 .custom-table th {
-    padding: 15px 20px;
+   
     text-align: left;
     color: #888;
     font-size: 13px;
@@ -100,7 +109,6 @@ body{
 }
 
 .custom-table td {
-    padding: 18px 20px;
     color: #e0e0e0;
     border-top: 1px solid var(--glass-border);
     border-bottom: 1px solid var(--glass-border);
@@ -108,6 +116,7 @@ body{
 
 .custom-table td:first-child { border-left: 1px solid var(--glass-border); border-radius: 12px 0 0 12px; }
 .custom-table td:last-child { border-right: 1px solid var(--glass-border); border-radius: 0 12px 12px 0; }
+
 
 /* Badges & Actions */
 .status-badge {
@@ -188,6 +197,7 @@ body{
     height: auto;
     margin: auto;
 }
+
 </style>
 
 <div class="admin-card">

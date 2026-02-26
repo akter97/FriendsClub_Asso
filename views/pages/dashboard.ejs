@@ -14,8 +14,7 @@
         color: var(--text);
         padding: 20px;
     }
-
-    .section-header {
+      .section-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -28,31 +27,28 @@
     .stats-gridtop,.stats-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr); 
-        gap: 12px;
+        gap: 4px;
         margin-bottom: 20px;
     }
-
-    .stat-card {
+   .stat-card {
         background: var(--card-bg);
-        padding: 15px;
+        padding: 13px;
         border-radius: 12px;
         display: flex;
         align-items: center;
         gap: 10px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
-
-    .stat-icon {
-        width: 35px; height: 35px;
+  .stat-icon {
+        width: 25px; height: 25px;
         border-radius: 8px;
         display: flex; align-items: center; justify-content: center;
-        color: #fff; font-size: 16px;
+        color: #fff; font-size: 18px;
     }
 
-    .stat-card h3 { margin: 0; font-size: 18px; }
+    .stat-card h3 { margin: 0; font-size: 17px; }
     .stat-card small { color: rgba(255,255,255,0.6); display: block; }
-
-    h2 { font-size: 18px; margin: 20px 0 10px; border-left: 4px solid var(--primary); padding-left: 10px; }
+     h2 { font-size: 18px; margin: 20px 0 10px; border-left: 4px solid var(--primary); padding-left: 10px; }
 
     .glass-card {
         background: var(--card-bg);
@@ -65,7 +61,7 @@
     th { text-align: left; color: rgba(255,255,255,0.5); padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
     td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-    @media (max-width: 480px) {
+ @media (max-width: 480px) {
         .stats-grid { grid-template-columns: repeat(2, 2fr); } /* Mobile-e single column */
         .stats-gridtop { grid-template-columns: repeat(3, 1fr); } /* Mobile-e single column */
     }
