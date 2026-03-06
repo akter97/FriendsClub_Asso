@@ -1,4 +1,5 @@
  const paymentRepo = require('../repositories/payment.repository');
+ const periodrepository= require('../repositories/period.repository');
  const db = require("../config/db");
  exports.getPeriodPage = (req, res) => { 
     const sql = "SELECT * FROM periods ORDER BY id DESC";    
@@ -26,7 +27,10 @@ exports.addPeriod = (req, res) => {
                         "July", "August", "September", "October", "November", "December"];
     const monthName = monthNames[parseInt(monthNum) - 1];
 
-    const sql = `INSERT INTO periods (month_name, month_number, year, status,amount) VALUES (?,?, ?, ?, ?)`;
+    //const sql = `INSERT INTO periods (month_name, month_number, year, status,amount) VALUES (?,?, ?, ?, ?)`;
+    const sql = `INSERT INTO periods 
+(month_name, month_number, year, status, amount, process)
+VALUES (?, ?, ?, ?, ?, 0)`;
     
     db.query(sql, [monthName, monthNum, year, status,amount], (err, result) => {
         if (err) {
@@ -97,4 +101,21 @@ exports.updatePeriod = (req, res) => {
             message: 'Server crashed'
         });
     }
+};
+
+exports.deletePeriod = (req, res) => {
+
+    const id = req.params.id;
+
+    periodrepository.deletePeriod(id, (err, result) => {
+
+        if (err) {
+            console.log(err);
+            return res.json({ success: false });
+        }
+
+        res.json({ success: true });
+
+    });
+
 };

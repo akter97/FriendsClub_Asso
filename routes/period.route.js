@@ -20,4 +20,7 @@ router.post('/add',isAuth, periodController.addPeriod);
 router.post('/update', periodController.updatePeriod);
 
 router.post('/processPayment', periodController.processPayment);
+
+ router.delete('/delete/:id', isAuth, periodController.deletePeriod);
+
 module.exports = router;
