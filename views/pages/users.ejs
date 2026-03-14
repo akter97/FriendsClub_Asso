@@ -1,135 +1,377 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Management</title>
+<!-- <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet"> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-  /* --- Updated Form & Input Styling --- */
-input, select, textarea {
-    width: 100%; /* Full width */
-    padding: 12px 15px;
-    margin-bottom: 5px; /* Spacing between steps */
-    border-radius: 8px;
-    border: 1px solid #ddd; 
-    font-size: 15px;
-    box-sizing: border-box; /* Ensures padding doesn't break width */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    display: block; /* Ensures they behave as blocks */
+/* ══════════════════════════════════════
+   ROOT
+══════════════════════════════════════ */
+ :root {
+  --primary:        #3b5bdb;
+  --primary-dark:   #2f4ac3;
+  --primary-glow:   rgba(59,91,219,0.13);
+  --success:        #12b886;
+  --success-bg:     #e6fcf5;
+  --warning:        #f59f00;
+  --warning-bg:     #fff9db;
+  --danger:         #fa5252;
+  --danger-bg:      #fff5f5;
+  --processed-bg:   #d3f9d8;
+  --processed-fg:   #2f9e44;
+  --bg:             #eef2ff;
+  --surface:        #ffffff;
+  --surface2:       #f8f9fe;
+  --border:         #e4e9f7;
+  --text:           #1a1f36;
+  --text-muted:     #8792b0;
+  --shadow-sm:      0 1px 4px rgba(59,91,219,0.07);
+  --shadow-md:      0 4px 24px rgba(59,91,219,0.11);
+  --shadow-lg:      0 8px 40px rgba(59,91,219,0.15);
+  --radius:         16px;
+  --radius-sm:      10px;
+  --radius-pill:    100px;
 }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  color: var(--text);
+  padding: 24px 16px 60px;
+}
+
+/* ══════════════════════════════════════
+   CONTAINER
+══════════════════════════════════════ */
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(12px);
+  animation: fadeUp 0.4s ease both;
+}
+
+/* ══════════════════════════════════════
+   HEADING
+══════════════════════════════════════ */
+.page-heading {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.heading-icon {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; color: #3144ef; flex-shrink: 0;
+}
+.heading-text h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(18px, 4vw, 24px);
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+.heading-text p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+/* ══════════════════════════════════════
+   FORM — LABELS & INPUTS
+══════════════════════════════════════ */
+label {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface2);
+  box-sizing: border-box;
+  display: block;
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+  outline: none;
+  -webkit-appearance: none; appearance: none;
+}
+input::placeholder, textarea::placeholder { color: var(--text-muted); }
 
 input:focus, select:focus, textarea:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 8px rgba(102, 126, 234, 0.2);
-    outline: none; 
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-glow);
+  background: rgba(255,255,255,0.09);
 }
 
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #4a5568;
-    font-size: 14px;
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%239097b8' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px;
+  padding-right: 38px;
+  cursor: pointer;
+}
+select option { background: #f3f3f4; color: var(--text); }
+
+textarea { resize: vertical; min-height: 90px; }
+
+/* Readonly style */
+input[readonly] {
+  background: rgba(0,0,0,0.28) !important;
+  color: var(--text-muted);
+  cursor: not-allowed;
 }
 
+/* ══════════════════════════════════════
+   FORM STEP
+══════════════════════════════════════ */
 .form-step {
-    width: 100%; /* Full size ensures admin/user fields are identical */
-    margin-bottom: 20px;
-    animation: fadeIn 0.4s ease;
+  width: 100%;
+  margin-bottom: 16px;
+  animation: fadeIn 0.35s ease;
 }
 
-/* Container Adjustments */
-.container {
-    max-width: 800px;  
-    margin: 40px 10px; 
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+/* ══════════════════════════════════════
+   PROFILE PICTURE PREVIEW
+══════════════════════════════════════ */
+.picture-preview-wrap {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
 }
-  #submitBtn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 12px 35px;
-    font-size: 16px;
-    font-weight: 600;
-    border-radius: 30px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    letter-spacing: 0.5px;
+#previewImage {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary);
+  display: none;
+  flex-shrink: 0;
 }
 
-#submitBtn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6);
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+/* ══════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════ */
+.btn-wrap {
+  margin-top: 28px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-#submitBtn:active {
-    transform: translateY(0);
+#submitBtn, #updateBtn {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+  color: #fff;
+  border: none;
+  padding: 13px 36px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(102,126,234,0.38);
+  transition: all 0.25s;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  letter-spacing: 0.4px;
+  font-family: 'DM Sans', sans-serif;
+}
+#submitBtn:hover, #updateBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 24px rgba(118,75,162,0.55);
+  background: linear-gradient(135deg, var(--primary-2) 0%, var(--primary) 100%);
+}
+#submitBtn:active, #updateBtn:active { transform: translateY(0); }
+#submitBtn:disabled, #updateBtn:disabled {
+  background: #4a4f6a;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.6;
 }
 
-/* Loading animation effect (jodi proyojon hoy) */
-#submitBtn:disabled {
-    background: #bdc3c7;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+/* ══════════════════════════════════════
+   DIVIDER
+══════════════════════════════════════ */
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 36px 0;
 }
 
+/* ══════════════════════════════════════
+   TABLE SECTION HEADING
+══════════════════════════════════════ */
+.table-heading {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 16px;
+  font-family: 'Syne', sans-serif;
+  font-size: 16px; font-weight: 800;
+  color: var(--text);
+}
+.table-heading i { color: var(--primary); }
 
- #updateBtn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 12px 35px;
-    font-size: 16px;
-    font-weight: 600;
-    border-radius: 30px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    letter-spacing: 0.5px;
+/* ══════════════════════════════════════
+   TABLE
+══════════════════════════════════════ */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 440px;
+}
+thead tr { background: rgba(102,126,234,0.12); }
+th {
+  padding: 12px 14px;
+  text-align: center;
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--primary);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+td {
+  padding: 12px 14px;
+  text-align: center;
+  font-size: 14px; color: var(--text);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+tbody tr { transition: background 0.15s; }
+tbody tr:hover { background: rgba(255,255,255,0.04); }
+tbody tr:last-child td { border-bottom: none; }
+
+td small { color: var(--text-muted); font-size: 12px; display: block; margin-top: 2px; }
+
+/* Avatar */
+.user-avatar {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary);
+  display: block;
+  margin: 0 auto;
 }
 
-#updateBtn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6);
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+/* Action buttons */
+.action-buttons { display: flex; justify-content: center; gap: 6px; }
+
+.btn-edit {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(102,126,234,0.18);
+  color: var(--primary);
+  padding: 6px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 13px; font-weight: 600;
+  border: 1px solid rgba(102,126,234,0.3);
+  transition: background 0.2s, transform 0.15s;
+  cursor: pointer;
+}
+.btn-edit:hover {
+  background: rgba(102,126,234,0.32);
+  transform: scale(1.05);
 }
 
-#updateBtn:active {
-    transform: translateY(0);
+/* ══════════════════════════════════════
+   MOBILE CARDS  ≤ 560px
+══════════════════════════════════════ */
+.mobile-user-cards { display: none; flex-direction: column; gap: 12px; }
+.mu-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex; align-items: center; gap: 14px;
+}
+.mu-card-info { flex: 1; min-width: 0; }
+.mu-name  { font-weight: 700; font-size: 15px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mu-email { font-size: 12px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mu-mobile { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+/* ══════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Loading animation effect (jodi proyojon hoy) */
-#updateBtn:disabled {
-    background: #bdc3c7;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+/* ══════════════════════════════════════
+   RESPONSIVE — TABLET ≤ 768px
+══════════════════════════════════════ */
+@media (max-width: 768px) {
+  body { padding: 14px 10px 50px; }
+  .container { padding: 22px 16px; border-radius: 12px; }
+  #submitBtn, #updateBtn { padding: 12px 28px; font-size: 14px; }
 }
-/* --- Basic Styling --- */
- 
-h2 { color: #667eea; margin-bottom: 20px; }
-table { width: 100%; border-collapse: collapse; }
-th, td { padding: 10px; text-align: center; border-bottom: 1px solid #ddd; }
-.action-buttons { display: flex; justify-content: center; gap: 5px; }
-.btn-edit { background: #3498db; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none; }
-input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; }
-.form-step { display: block; animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ══════════════════════════════════════
+   RESPONSIVE — MOBILE ≤ 560px
+══════════════════════════════════════ */
+@media (max-width: 560px) {
+  .container { padding: 18px 12px; }
+  .heading-icon { width: 40px; height: 40px; font-size: 17px; }
+  /* Hide table, show cards */
+  .table-wrap table { display: none; }
+  .mobile-user-cards { display: flex; }
+  .btn-wrap { flex-direction: column; align-items: stretch; }
+  #submitBtn, #updateBtn { justify-content: center; }
+}
+
+@media (max-width: 380px) {
+  .page-heading { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
 </style>
+</head>
+<body>
 
 <div class="container">
-  <h2 style="color:hsl(0, 0%, 100%);" ><i class="fas fa-user"></i> <em style="margin-left: 10px;">User Management</em></h2>
 
-  <!-- User Form -->
+  <!-- ── HEADING ── -->
+  <div class="page-heading">
+    <div class="heading-icon"><i class="fas fa-users"></i></div>
+    <div class="heading-text">
+      <h2>User Management</h2>
+      <p>Add, edit and manage system users</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       FORM  — ★ ALL original IDs, names,
+       actions, enctype UNCHANGED ★
+  ══════════════════════════════════════ -->
   <form id="registrationForm" method="POST" action="/users" enctype="multipart/form-data">
     <input type="hidden" name="id" id="userId">
+
+    <!-- Role -->
     <div class="form-step" id="step-roleId">
-      <label style="color:hsl(0, 0%, 100%)">Select User Role *</label>
+      <label>Select User Role *</label>
       <select name="roleId" id="roleId" required>
         <option value="" disabled selected>Select Role</option>
         <option value="1">Admin</option>
@@ -137,81 +379,108 @@ input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; borde
       </select>
     </div>
 
-    <div class="form-step" id="step-name" style="display: none;">
+    <!-- Name -->
+    <div class="form-step" id="step-name" style="display:none;">
+      <label>Full Name *</label>
       <input name="name" id="name" placeholder="Full Name *" required />
     </div>
 
-    <div class="form-step" id="step-email" style="display: none;">
+    <!-- Email -->
+    <div class="form-step" id="step-email" style="display:none;">
+      <label>Email Address *</label>
       <input name="email" id="email" type="email" placeholder="Email Address *" required />
     </div>
 
-    <div class="form-step" id="step-password" style="display: none;">
+    <!-- Password -->
+    <div class="form-step" id="step-password" style="display:none;">
+      <label>Password *</label>
       <input name="password" id="password" type="password" placeholder="Password *" />
     </div>
 
-    <div class="form-step" id="step-confirmPassword" style="display: none;">
+    <!-- Confirm Password -->
+    <div class="form-step" id="step-confirmPassword" style="display:none;">
+      <label>Confirm Password *</label>
       <input name="confirmPassword" id="confirmPassword" type="password" placeholder="Confirm Password *" />
     </div>
-    <div class="form-step" id="step-MemberCode" style="display: none;">
+
+    <!-- Member Code -->
+    <div class="form-step" id="step-MemberCode" style="display:none;">
+      <label>Member Code</label>
       <input name="MemberCode" id="MemberCode" placeholder="Member Code" />
     </div>
 
-    <div class="form-step" id="step-FathersName" style="display: none;">
+    <!-- Father's Name -->
+    <div class="form-step" id="step-FathersName" style="display:none;">
+      <label>Father's Name</label>
       <input name="FathersName" id="FathersName" placeholder="Father's Name" />
     </div>
 
-    <div class="form-step" id="step-MothersName" style="display: none;">
+    <!-- Mother's Name -->
+    <div class="form-step" id="step-MothersName" style="display:none;">
+      <label>Mother's Name</label>
       <input name="MothersName" id="MothersName" placeholder="Mother's Name" />
     </div>
 
-    <div class="form-step" id="step-MobileNo" style="display: none;">
+    <!-- Mobile -->
+    <div class="form-step" id="step-MobileNo" style="display:none;">
+      <label>Mobile Number</label>
       <input name="MobileNo" id="MobileNo" placeholder="Mobile Number" />
     </div>
 
-    <div class="form-step" id="step-PassportNo" style="display: none;">
+    <!-- Passport -->
+    <div class="form-step" id="step-PassportNo" style="display:none;">
+      <label>Passport Number</label>
       <input name="PassportNo" id="PassportNo" placeholder="Passport Number" />
     </div>
 
-    <div class="form-step" id="step-Organization" style="display: none;">
+    <!-- Organization -->
+    <div class="form-step" id="step-Organization" style="display:none;">
+      <label>Organization</label>
       <input name="Organization" id="Organization" placeholder="Organization" />
     </div>
 
+    <!-- Picture -->
     <div class="form-step" id="step-Picture" style="display:none;">
-  <label>Profile Picture</label>
+      <label>Profile Picture</label>
+      <div class="picture-preview-wrap">
+        <img id="previewImage" src="/Image/ProfilePicture/default.png" alt="Preview">
+        <span style="font-size:12px;color:var(--text-muted);">Current photo</span>
+      </div>
+      <input type="file" name="Picture" id="Picture" accept="image/*">
+      <input type="hidden" name="OldPicture" id="OldPicture">
+    </div>
 
-  <!-- Old Image Preview -->
-  <img id="previewImage"
-       src="/Image/ProfilePicture/default.png"
-       width="80"
-       style="display:none; border-radius:50%; margin-bottom:10px;">
-
-  <input type="file" name="Picture" id="Picture" accept="image/*">
-
-  <!-- old picture name -->
-  <input type="hidden" name="OldPicture" id="OldPicture">
-</div>
-
-    <div class="form-step" id="step-PresentAddress" style="display: none;">
+    <!-- Present Address -->
+    <div class="form-step" id="step-PresentAddress" style="display:none;">
+      <label>Present Address</label>
       <textarea name="PresentAddress" id="PresentAddress" placeholder="Present Address"></textarea>
     </div>
 
-    <div style="margin-top: 30px; text-align: center;">
-    <button type="submit" id="submitBtn" style="display: none;">
-        <span>💾</span> Save
-    </button>
-    <button type="submit" id="updateBtn" style="display:none;">
-  <span>🔄</span> Update
-</button>
-</div>
+    <!-- Buttons -->
+    <div class="btn-wrap">
+      <button type="submit" id="submitBtn" style="display:none;">
+        <i class="fas fa-save"></i> Save
+      </button>
+      <button type="submit" id="updateBtn" style="display:none;">
+        <i class="fas fa-sync-alt"></i> Update
+      </button>
+    </div>
   </form>
 
-  <hr style="margin: 40px 0;">
+  <hr class="section-divider">
 
-  <!-- Users Table -->
-  <div style="overflow-x: auto;">
+  <!-- ══════════════════════════════════════
+       USER TABLE
+  ══════════════════════════════════════ -->
+  <div class="table-heading">
+    <i class="fas fa-list"></i> All Users
+  </div>
+
+  <!-- Desktop Table -->
+  <div class="table-wrap">
     <table>
       <thead>
-        <tr style="color:white">
+        <tr>
           <th>Picture</th>
           <th>Name</th>
           <th>Mobile</th>
@@ -220,17 +489,21 @@ input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; borde
       </thead>
       <tbody>
         <% users.forEach(u => { %>
-          <tr> 
-            <td> 
-            <img src="/Image/ProfilePicture/<%= u.Picture || 'default.png' %>" 
-                    width="40" height="40" 
-                    style="border-radius: 50%; object-fit: cover;"
-                    onerror="this.src='/Image/ProfilePicture/default.png'">
+          <tr>
+            <td>
+              <img class="user-avatar"
+                src="/Image/ProfilePicture/<%= u.Picture || 'default.png' %>"
+                onerror="this.src='/Image/ProfilePicture/default.png'"
+                alt="<%= u.name %>">
             </td>
-               <td><%= u.name %><br><small><%= u.email %></small></td>
+            <td>
+              <strong><%= u.name %></strong>
+              <small><%= u.email %></small>
+            </td>
             <td><%= u.MobileNo || 'N/A' %></td>
             <td>
               <div class="action-buttons">
+                <!-- ★ ORIGINAL data-* attributes UNCHANGED ★ -->
                 <a href="#" class="btn-edit"
                   data-id="<%= u.id %>"
                   data-roleid="<%= u.roleId %>"
@@ -245,7 +518,7 @@ input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; borde
                   data-organization="<%= u.Organization || '' %>"
                   data-presentaddress="<%= u.PresentAddress || '' %>"
                   data-picture="<%= u.Picture || '' %>">
-                  ✏️
+                  <i class="fas fa-edit"></i> Edit
                 </a>
               </div>
             </td>
@@ -254,157 +527,188 @@ input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; borde
       </tbody>
     </table>
   </div>
-</div> 
 
+  <!-- Mobile Cards (≤560px) — built by JS -->
+  <div class="mobile-user-cards" id="mobileUserCards"></div>
+
+</div><!-- /container -->
+
+<!-- ══════════════════════════════════════
+     SCRIPT — ★ ALL ORIGINAL LOGIC UNCHANGED ★
+══════════════════════════════════════ -->
 <script>
- const steps = [
-    'roleId', 'name', 'email', 'password', 'confirmPassword', 'MemberCode',
-    'FathersName', 'MothersName', 'MobileNo', 'PassportNo', 'Organization', 'Picture', 'PresentAddress'
+/* ─── ORIGINAL vars ─────────────────────────────────────── */
+const steps = [
+  'roleId','name','email','password','confirmPassword','MemberCode',
+  'FathersName','MothersName','MobileNo','PassportNo','Organization','Picture','PresentAddress'
 ];
-
-const form = document.getElementById('registrationForm');
-const submitBtn = document.getElementById('submitBtn');
-const updateBtn = document.getElementById('updateBtn');
-const userIdInput = document.getElementById('userId');
-const passwordInput = document.getElementById('password');
+const form               = document.getElementById('registrationForm');
+const submitBtn          = document.getElementById('submitBtn');
+const updateBtn          = document.getElementById('updateBtn');
+const userIdInput        = document.getElementById('userId');
+const passwordInput      = document.getElementById('password');
 const confirmPasswordInput = document.getElementById('confirmPassword');
-const requiredFields = ['roleId', 'name', 'email', 'password', 'confirmPassword', 'MemberCode'];
+const requiredFields     = ['roleId','name','email','password','confirmPassword','MemberCode'];
 
-// --- Helper: Check Form Validity ---
+/* ─── ★ ORIGINAL — validateForm ★ ──────────────────────── */
 function validateForm() {
-    const isEdit = userIdInput.value !== "";
-    let allRequiredFilled = true;
- 
-    const fieldsToVerify = isEdit ? ['roleId', 'name', 'email', 'MemberCode'] : requiredFields;
-
-    fieldsToVerify.forEach(id => {
-        const el = document.getElementById(id);
-        if (el && el.value.trim() === "") allRequiredFilled = false;
-    });
- 
-    const passwordsMatch = passwordInput.value === confirmPasswordInput.value;
-
-    if (allRequiredFilled && passwordsMatch) {
-        if (isEdit) {
-            updateBtn.style.display = 'inline-block';
-            submitBtn.style.display = 'none';
-        } else {
-            submitBtn.style.display = 'inline-block';
-            updateBtn.style.display = 'none';
-        }
+  const isEdit = userIdInput.value !== "";
+  let allRequiredFilled = true;
+  const fieldsToVerify = isEdit ? ['roleId','name','email','MemberCode'] : requiredFields;
+  fieldsToVerify.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.value.trim() === "") allRequiredFilled = false;
+  });
+  const passwordsMatch = passwordInput.value === confirmPasswordInput.value;
+  if (allRequiredFilled && passwordsMatch) {
+    if (isEdit) {
+      updateBtn.style.display = 'inline-flex';
+      submitBtn.style.display = 'none';
     } else {
-        submitBtn.style.display = 'none';
-        updateBtn.style.display = 'none';
+      submitBtn.style.display = 'inline-flex';
+      updateBtn.style.display = 'none';
     }
+  } else {
+    submitBtn.style.display = 'none';
+    updateBtn.style.display = 'none';
+  }
 }
 
-// 
+/* ─── ★ ORIGINAL — step reveal & listeners ★ ───────────── */
 steps.forEach((id, index) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    const eventType = el.tagName === 'SELECT' || el.type === 'file' ? 'change' : 'input';
-    el.addEventListener(eventType, () => { 
-        if (!userIdInput.value && el.value.trim() !== "") {
-            const nextId = steps[index + 1];
-            if (nextId) document.getElementById(nextId).parentElement.style.display = 'block';
-        } 
-        if (id === 'confirmPassword' || id === 'password') {
-            confirmPasswordInput.style.borderColor = (passwordInput.value === confirmPasswordInput.value) ? 'green' : 'red';
-        }
-        
-        validateForm();
-    });
+  const el = document.getElementById(id);
+  if (!el) return;
+  const eventType = el.tagName === 'SELECT' || el.type === 'file' ? 'change' : 'input';
+  el.addEventListener(eventType, () => {
+    if (!userIdInput.value && el.value.trim() !== "") {
+      const nextId = steps[index + 1];
+      if (nextId) document.getElementById('step-' + nextId).style.display = 'block';
+    }
+    if (id === 'confirmPassword' || id === 'password') {
+      confirmPasswordInput.style.borderColor =
+        (passwordInput.value === confirmPasswordInput.value) ? '#12b886' : '#fa5252';
+    }
+    validateForm();
+  });
 });
 
-// --- Edit Mode Logic ---
+/* ─── ★ ORIGINAL — edit mode ★ ─────────────────────────── */
 document.querySelectorAll('.btn-edit').forEach(btn => {
-    btn.addEventListener('click', e => {
-        e.preventDefault(); 
-        document.querySelectorAll('.form-step').forEach(s => s.style.display = 'block');
-  // set + readonly
-        const memberCodeInput = document.getElementById('MemberCode');
-        memberCodeInput.value = btn.dataset.membercode || '';
-        memberCodeInput.readOnly = true;
-        memberCodeInput.style.backgroundColor = 'rgba(0, 0, 0, 0.36)';
-        document.getElementById('password').style.display='none';
-        document.getElementById('confirmPassword').style.display='none';
-        document.querySelectorAll('.form-step').forEach(s => s.style.display = 'block');
-
-        userIdInput.value = btn.dataset.id;
-        document.getElementById('roleId').value = btn.dataset.roleid || '';
-        document.getElementById('name').value = btn.dataset.name || '';
-        document.getElementById('email').value = btn.dataset.email || '';
-        document.getElementById('MemberCode').value = btn.dataset.membercode || '';
-        document.getElementById('FathersName').value = btn.dataset.fathersname || '';
-        document.getElementById('MothersName').value = btn.dataset.mothersname || '';
-        document.getElementById('MobileNo').value = btn.dataset.mobileno || '';
-        document.getElementById('PassportNo').value = btn.dataset.passportno || '';
-        document.getElementById('Organization').value = btn.dataset.organization || '';
-        document.getElementById('PresentAddress').value = btn.dataset.presentaddress || '';
- 
-        passwordInput.value = '';
-        confirmPasswordInput.value = '';
-        confirmPasswordInput.style.borderColor = '#ddd';
- 
-        const preview = document.getElementById('previewImage');
-        const oldPicInput = document.getElementById('OldPicture');
-        if (btn.dataset.picture) {
-            preview.src = `/Image/ProfilePicture/${btn.dataset.picture}`;
-            preview.style.display = 'block';
-            oldPicInput.value = btn.dataset.picture;
-        } else {
-            preview.style.display = 'none';
-        } 
-        validateForm();
-        form.scrollIntoView({ behavior: 'smooth' });
-    });
-});
-
-// --- Update API Call ---
- updateBtn.addEventListener('click', (e) => {
+  btn.addEventListener('click', e => {
     e.preventDefault();
+    document.querySelectorAll('.form-step').forEach(s => s.style.display = 'block');
 
-    // Debug alert
-    alert(90);
+    const memberCodeInput = document.getElementById('MemberCode');
+    memberCodeInput.value = btn.dataset.membercode || '';
+    memberCodeInput.readOnly = true;
+    memberCodeInput.style.backgroundColor = 'rgba(0,0,0,0.36)';
 
-    const formData = new FormData(form);
+    document.getElementById('password').style.display = 'none';
+    document.getElementById('confirmPassword').style.display = 'none';
 
-    // Log form data for debugging
-    for (let [key, value] of formData.entries()) {
-        if (value instanceof File) {
-            console.log(key, value.name);
-        } else {
-            console.log(key, value);
-        }
+    userIdInput.value = btn.dataset.id;
+    document.getElementById('roleId').value         = btn.dataset.roleid        || '';
+    document.getElementById('name').value           = btn.dataset.name          || '';
+    document.getElementById('email').value          = btn.dataset.email         || '';
+    document.getElementById('MemberCode').value     = btn.dataset.membercode    || '';
+    document.getElementById('FathersName').value    = btn.dataset.fathersname   || '';
+    document.getElementById('MothersName').value    = btn.dataset.mothersname   || '';
+    document.getElementById('MobileNo').value       = btn.dataset.mobileno      || '';
+    document.getElementById('PassportNo').value     = btn.dataset.passportno    || '';
+    document.getElementById('Organization').value   = btn.dataset.organization  || '';
+    document.getElementById('PresentAddress').value = btn.dataset.presentaddress|| '';
+
+    passwordInput.value = '';
+    confirmPasswordInput.value = '';
+    confirmPasswordInput.style.borderColor = 'var(--border)';
+
+    const preview    = document.getElementById('previewImage');
+    const oldPicInput = document.getElementById('OldPicture');
+    if (btn.dataset.picture) {
+      preview.src = `/Image/ProfilePicture/${btn.dataset.picture}`;
+      preview.style.display = 'block';
+      oldPicInput.value = btn.dataset.picture;
+    } else {
+      preview.style.display = 'none';
     }
 
-    fetch('/usersUpdate', {
-        method: 'POST',
-        body: formData
-    })
+    validateForm();
+    form.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+/* ─── ★ ORIGINAL — updateBtn click ★ ───────────────────── */
+updateBtn.addEventListener('click', (e) => {
+  e.preventDefault();  
+  const formData = new FormData(form);
+  for (let [key, value] of formData.entries()) {
+    if (value instanceof File) { console.log(key, value.name); }
+    else { console.log(key, value); }
+  }
+  fetch('/usersUpdate', { method: 'POST', body: formData })
     .then(async r => {
-        // Check content type
-        const contentType = r.headers.get('content-type');
-        let data;
-        if (contentType && contentType.includes('application/json')) {
-            data = await r.json();
-        } else {
-            const text = await r.text();
-            console.error('Expected JSON but got:', text);
-            throw new Error('Server did not return JSON.');
-        }
-        return data;
+      const contentType = r.headers.get('content-type');
+      let data;
+      if (contentType && contentType.includes('application/json')) {
+        data = await r.json();
+      } else {
+        const text = await r.text();
+        console.error('Expected JSON but got:', text);
+        throw new Error('Server did not return JSON.');
+      }
+      return data;
     })
     .then(d => {
-        if (d.success) {
-            alert('✅ Updated successfully');
-            location.reload();
-        } else {
-            alert('❌ Update failed: ' + (d.message || 'Unknown error'));
-        }
+      if (d.success) { alert('✅ Updated successfully'); location.reload(); }
+      else { alert('❌ Update failed: ' + (d.message || 'Unknown error')); }
     })
     .catch(err => alert('❌ Error: ' + err));
 });
 
+/* ─── MOBILE CARDS (design only, no API) ────────────────── */
+function buildMobileCards() {
+  const mc   = document.getElementById('mobileUserCards');
+  const rows = document.querySelectorAll('table tbody tr');
+  if (!mc || !rows.length) return;
+
+  rows.forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    if (tds.length < 4) return;
+
+    const img    = tds[0].querySelector('img');
+    const name   = tds[1].querySelector('strong')?.textContent.trim() || '';
+    const email  = tds[1].querySelector('small')?.textContent.trim()  || '';
+    const mobile = tds[2].textContent.trim();
+    const editBtn = tds[3].querySelector('.btn-edit');
+
+    const card = document.createElement('div');
+    card.className = 'mu-card';
+    card.innerHTML = `
+      ${img ? `<img class="user-avatar" src="${img.src}" onerror="this.src='/Image/ProfilePicture/default.png'" alt="${name}" style="width:52px;height:52px;">` : ''}
+      <div class="mu-card-info">
+        <div class="mu-name">${name}</div>
+        <div class="mu-email">${email}</div>
+        <div class="mu-mobile"><i class="fas fa-phone" style="font-size:10px;margin-right:4px;"></i>${mobile}</div>
+      </div>`;
+
+    /* Clone the edit button so all its data-* attrs & listener work */
+    if (editBtn) {
+      const cloned = editBtn.cloneNode(true);
+      cloned.innerHTML = '<i class="fas fa-edit"></i>';
+      cloned.style.flexShrink = '0';
+      /* re-attach the same click listener via triggering on original */
+      cloned.addEventListener('click', e => {
+        e.preventDefault();
+        editBtn.click();
+      });
+      card.appendChild(cloned);
+    }
+
+    mc.appendChild(card);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', buildMobileCards);
 </script>
+</body>
+</html>
